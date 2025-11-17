@@ -16,39 +16,45 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Datos del examen (modulares - fácil de cambiar)
+// Datos del examen con diferentes tipos de preguntas
 const examData = {
     title: "Examen de Conocimientos Generales",
     questions: [
         {
             id: 1,
+            type: "multiple",
             text: "¿Cuál es la capital de Francia?",
             options: ["Londres", "Berlín", "París", "Madrid"],
-            correctAnswer: 2 // Índice de la respuesta correcta (0-based)
+            correctAnswer: 2
         },
         {
             id: 2,
-            text: "¿En qué año llegó el hombre a la luna?",
-            options: ["1965", "1969", "1972", "1975"],
-            correctAnswer: 1
+            type: "truefalse",
+            text: "La Tierra es el tercer planeta del sistema solar.",
+            correctAnswer: 0 // 0 para verdadero, 1 para falso
         },
         {
             id: 3,
-            text: "¿Cuál es el río más largo del mundo?",
-            options: ["Nilo", "Amazonas", "Misisipi", "Yangtsé"],
-            correctAnswer: 1
+            type: "fillblank",
+            text: "La capital de España es ________.",
+            correctAnswer: "Madrid"
         },
         {
             id: 4,
-            text: "¿Quién escribió 'Cien años de soledad'?",
-            options: ["Pablo Neruda", "Gabriel García Márquez", "Mario Vargas Llosa", "Julio Cortázar"],
-            correctAnswer: 1
+            type: "dragdrop",
+            text: "Arrastra las palabras a los espacios correctos: El ________ es el autor de 'Cien años de ________'.",
+            parts: [
+                { text: "Gabriel García Márquez", correctPosition: 0 },
+                { text: "soledad", correctPosition: 1 }
+            ],
+            options: ["Gabriel García Márquez", "Pablo Neruda", "soledad", "esperanza"]
         },
         {
             id: 5,
-            text: "¿Cuál es el elemento químico con símbolo 'O'?",
-            options: ["Oro", "Osmio", "Oxígeno", "Oganesón"],
-            correctAnswer: 2
+            type: "multiple",
+            text: "¿Cuál es el río más largo del mundo?",
+            options: ["Nilo", "Amazonas", "Misisipi", "Yangtsé"],
+            correctAnswer: 1
         }
     ]
 };
@@ -72,17 +78,28 @@ const incorrectQuestionsContainer = document.getElementById('incorrect-questions
 function displayQuestion() {
     const question = examData.questions[currentQuestionIndex];
     
-    questionContainer.innerHTML = `
+    let questionHTML = `
         <div class="question-number">Pregunta ${currentQuestionIndex + 1} de ${examData.questions.length}</div>
         <div class="question-text">${question.text}</div>
-        <div class="options-container">
-            ${question.options.map((option, index) => `
-                <div class="option ${userAnswers[currentQuestionIndex] === index ? 'selected' : ''}" data-index="${index}">
-                    ${option}
-                </div>
-            `).join('')}
-        </div>
     `;
+    
+    // Renderizar según el tipo de pregunta
+    switch(question.type) {
+        case "multiple":
+            questionHTML += renderMultipleChoice(question);
+            break;
+        case "truefalse":
+            questionHTML += renderTrueFalse(question);
+            break;
+        case "fillblank":
+            questionHTML += renderFillBlank(question);
+            break;
+        case "dragdrop":
+            questionHTML += renderDragDrop(question);
+            break;
+    }
+    
+    questionContainer.innerHTML = questionHTML;
     
     // Actualizar barra de progreso
     const progressPercentage = ((currentQuestionIndex + 1) / examData.questions.length) * 100;
@@ -92,7 +109,98 @@ function displayQuestion() {
     prevBtn.disabled = currentQuestionIndex === 0;
     nextBtn.disabled = currentQuestionIndex === examData.questions.length - 1;
     
-    // Agregar event listeners a las opciones
+    // Agregar event listeners según el tipo de pregunta
+    addEventListeners(question);
+}
+
+// Renderizar pregunta de opción múltiple
+function renderMultipleChoice(question) {
+    return `
+        <div class="options-container">
+            ${question.options.map((option, index) => `
+                <div class="option ${userAnswers[currentQuestionIndex] === index ? 'selected' : ''}" data-index="${index}">
+                    ${option}
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// Renderizar pregunta verdadero/falso
+function renderTrueFalse(question) {
+    const userAnswer = userAnswers[currentQuestionIndex];
+    return `
+        <div class="truefalse-container">
+            <div class="truefalse-option true-option ${userAnswer === 0 ? 'selected' : ''}" data-value="0">
+                Verdadero
+            </div>
+            <div class="truefalse-option false-option ${userAnswer === 1 ? 'selected' : ''}" data-value="1">
+                Falso
+            </div>
+        </div>
+    `;
+}
+
+// Renderizar pregunta de autocompletar
+function renderFillBlank(question) {
+    const userAnswer = userAnswers[currentQuestionIndex] || '';
+    return `
+        <div class="fill-blank-container">
+            <div class="fill-blank-text">${question.text.replace('________', '<input type="text" class="blank-input" value="' + userAnswer + '">')}</div>
+        </div>
+    `;
+}
+
+// Renderizar pregunta de arrastrar y soltar
+function renderDragDrop(question) {
+    const userAnswer = userAnswers[currentQuestionIndex] || Array(question.parts.length).fill(null);
+    
+    // Crear texto con zonas de drop
+    let textWithDropZones = question.text;
+    question.parts.forEach((part, index) => {
+        const droppedItem = userAnswer[index] !== null ? 
+            `<span class="dropped-item" data-index="${index}">${question.options[userAnswer[index]]}</span>` : 
+            '';
+        textWithDropZones = textWithDropZones.replace('________', 
+            `<span class="drop-zone ${userAnswer[index] !== null ? 'filled' : ''}" data-index="${index}">${droppedItem}</span>`);
+    });
+    
+    // Crear elementos arrastrables
+    const availableItems = question.options.map((option, index) => {
+        const isUsed = userAnswer.includes(index);
+        return `<div class="drag-item ${isUsed ? 'used' : ''}" data-index="${index}" draggable="true">${option}</div>`;
+    }).join('');
+    
+    return `
+        <div class="drag-drop-container">
+            <div class="drag-drop-text">${textWithDropZones}</div>
+            <div class="drag-items-container">
+                ${availableItems}
+            </div>
+        </div>
+    `;
+}
+
+// Agregar event listeners según el tipo de pregunta
+function addEventListeners(question) {
+    switch(question.type) {
+        case "multiple":
+            addMultipleChoiceListeners();
+            break;
+        case "truefalse":
+            addTrueFalseListeners();
+            break;
+        case "fillblank":
+            addFillBlankListeners();
+            break;
+        case "dragdrop":
+            addDragDropListeners(question);
+            break;
+    }
+}
+
+// Event listeners para opción múltiple
+function addMultipleChoiceListeners() {
     document.querySelectorAll('.option').forEach(option => {
         option.addEventListener('click', () => {
             if (examSubmitted) return;
@@ -107,6 +215,95 @@ function displayQuestion() {
             userAnswers[currentQuestionIndex] = parseInt(option.getAttribute('data-index'));
         });
     });
+}
+
+// Event listeners para verdadero/falso
+function addTrueFalseListeners() {
+    document.querySelectorAll('.truefalse-option').forEach(option => {
+        option.addEventListener('click', () => {
+            if (examSubmitted) return;
+            
+            // Deseleccionar todas las opciones
+            document.querySelectorAll('.truefalse-option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Seleccionar la opción clickeada
+            option.classList.add('selected');
+            
+            // Guardar la respuesta del usuario
+            userAnswers[currentQuestionIndex] = parseInt(option.getAttribute('data-value'));
+        });
+    });
+}
+
+// Event listeners para autocompletar
+function addFillBlankListeners() {
+    const input = document.querySelector('.blank-input');
+    input.addEventListener('input', () => {
+        if (examSubmitted) return;
+        userAnswers[currentQuestionIndex] = input.value;
+    });
+}
+
+// Event listeners para arrastrar y soltar
+function addDragDropListeners(question) {
+    const dragItems = document.querySelectorAll('.drag-item');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    
+    // Configurar elementos arrastrables
+    dragItems.forEach(item => {
+        item.addEventListener('dragstart', dragStart);
+        item.addEventListener('dragend', dragEnd);
+    });
+    
+    // Configurar zonas de destino
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', dragOver);
+        zone.addEventListener('dragenter', dragEnter);
+        zone.addEventListener('dragleave', dragLeave);
+        zone.addEventListener('drop', (e) => drop(e, question));
+    });
+    
+    function dragStart(e) {
+        if (examSubmitted) return;
+        e.dataTransfer.setData('text/plain', e.target.getAttribute('data-index'));
+        setTimeout(() => {
+            e.target.classList.add('dragging');
+        }, 0);
+    }
+    
+    function dragEnd(e) {
+        e.target.classList.remove('dragging');
+    }
+    
+    function dragOver(e) {
+        e.preventDefault();
+    }
+    
+    function dragEnter(e) {
+        e.preventDefault();
+        e.target.classList.add('hover');
+    }
+    
+    function dragLeave(e) {
+        e.target.classList.remove('hover');
+    }
+    
+    function drop(e, question) {
+        e.preventDefault();
+        e.target.classList.remove('hover');
+        
+        const itemIndex = e.dataTransfer.getData('text/plain');
+        const zoneIndex = parseInt(e.target.getAttribute('data-index'));
+        
+        // Actualizar respuesta del usuario
+        if (!userAnswers[currentQuestionIndex]) {
+            userAnswers[currentQuestionIndex] = Array(question.parts.length).fill(null);
+        }
+        userAnswers[currentQuestionIndex][zoneIndex] = parseInt(itemIndex);
+        
+        // Actualizar la vista
+        displayQuestion();
+    }
 }
 
 // Navegación entre preguntas
@@ -127,7 +324,19 @@ nextBtn.addEventListener('click', () => {
 // Enviar examen
 submitBtn.addEventListener('click', async () => {
     // Verificar que todas las preguntas estén respondidas
-    const unanswered = userAnswers.some(answer => answer === null);
+    const unanswered = userAnswers.some((answer, index) => {
+        const question = examData.questions[index];
+        
+        if (answer === null) return true;
+        
+        // Para drag & drop, verificar que todas las partes estén completas
+        if (question.type === "dragdrop") {
+            return answer.some(part => part === null);
+        }
+        
+        return false;
+    });
+    
     if (unanswered) {
         alert('Por favor, responde todas las preguntas antes de enviar el examen.');
         return;
@@ -155,13 +364,55 @@ function calculateResults() {
     const incorrectQuestions = [];
     
     examData.questions.forEach((question, index) => {
-        if (userAnswers[index] === question.correctAnswer) {
+        let isCorrect = false;
+        const userAnswer = userAnswers[index];
+        
+        switch(question.type) {
+            case "multiple":
+            case "truefalse":
+                isCorrect = userAnswer === question.correctAnswer;
+                break;
+            case "fillblank":
+                isCorrect = userAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
+                break;
+            case "dragdrop":
+                isCorrect = question.parts.every((part, partIndex) => {
+                    return userAnswer[partIndex] === part.correctPosition;
+                });
+                break;
+        }
+        
+        if (isCorrect) {
             correctAnswers++;
         } else {
+            let userAnswerText = "";
+            let correctAnswerText = "";
+            
+            switch(question.type) {
+                case "multiple":
+                    userAnswerText = question.options[userAnswer];
+                    correctAnswerText = question.options[question.correctAnswer];
+                    break;
+                case "truefalse":
+                    userAnswerText = userAnswer === 0 ? "Verdadero" : "Falso";
+                    correctAnswerText = question.correctAnswer === 0 ? "Verdadero" : "Falso";
+                    break;
+                case "fillblank":
+                    userAnswerText = userAnswer;
+                    correctAnswerText = question.correctAnswer;
+                    break;
+                case "dragdrop":
+                    userAnswerText = question.parts.map((part, partIndex) => 
+                        question.options[userAnswer[partIndex]]).join(", ");
+                    correctAnswerText = question.parts.map(part => 
+                        question.options[part.correctPosition]).join(", ");
+                    break;
+            }
+            
             incorrectQuestions.push({
                 question: question.text,
-                userAnswer: question.options[userAnswers[index]],
-                correctAnswer: question.options[question.correctAnswer]
+                userAnswer: userAnswerText,
+                correctAnswer: correctAnswerText
             });
         }
     });
@@ -214,7 +465,7 @@ async function saveResultsToFirestore(results) {
             examTitle: examData.title,
             score: results.score,
             correctAnswers: results.correctAnswers,
-            totalQuestions: results.totalQuestions,
+            totalQuestions: examData.questions.length,
             incorrectQuestions: results.incorrectQuestions,
             userAnswers: userAnswers,
             timestamp: serverTimestamp()
@@ -228,7 +479,6 @@ async function saveResultsToFirestore(results) {
     } catch (e) {
         console.error("Error al guardar los resultados: ", e);
         
-        // Mostrar mensaje de error más específico
         let errorMessage = "Hubo un error al guardar los resultados. ";
         
         if (e.code === 'permission-denied') {
