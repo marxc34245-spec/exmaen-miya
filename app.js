@@ -140,10 +140,13 @@ submitBtn.addEventListener('click', async () => {
     displayResults(results);
     
     // Enviar a Firebase
-    await saveResultsToFirestore(results);
+    const saveSuccess = await saveResultsToFirestore(results);
     
-    examSubmitted = true;
-    submitBtn.disabled = true;
+    if (saveSuccess) {
+        examSubmitted = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Examen Enviado';
+    }
 });
 
 // Calcular resultados
@@ -221,14 +224,35 @@ async function saveResultsToFirestore(results) {
         
         // Ocultar indicador de carga
         displayQuestion();
+        return true;
     } catch (e) {
         console.error("Error al guardar los resultados: ", e);
-        alert("Hubo un error al guardar los resultados. Por favor, inténtalo de nuevo.");
+        
+        // Mostrar mensaje de error más específico
+        let errorMessage = "Hubo un error al guardar los resultados. ";
+        
+        if (e.code === 'permission-denied') {
+            errorMessage += "Error de permisos. Verifica las reglas de Firestore.";
+        } else {
+            errorMessage += "Por favor, inténtalo de nuevo.";
+        }
+        
+        alert(errorMessage);
         
         // Ocultar indicador de carga
         displayQuestion();
+        return false;
     }
 }
 
 // Inicializar la aplicación
 displayQuestion();
+
+// Silenciar el error de MediaSession (no afecta la funcionalidad)
+if ('mediaSession' in navigator) {
+    try {
+        navigator.mediaSession.setActionHandler('enterpictureinpicture', null);
+    } catch (e) {
+        // Ignorar el error
+    }
+}
