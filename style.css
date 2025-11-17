@@ -91,6 +91,143 @@ h1 {
     border-color: var(--primary-color);
 }
 
+/* Estilos para verdadero/falso */
+.truefalse-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.truefalse-option {
+    padding: 15px 30px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    text-align: center;
+    flex: 1;
+    max-width: 150px;
+}
+
+.truefalse-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.truefalse-option.selected {
+    border-color: var(--primary-color);
+    background-color: #e1ebff;
+}
+
+.true-option.selected {
+    border-color: var(--success-color);
+    background-color: #e8f5e8;
+}
+
+.false-option.selected {
+    border-color: var(--accent-color);
+    background-color: #ffeaea;
+}
+
+/* Estilos para autocompletar */
+.fill-blank-container {
+    margin-top: 15px;
+}
+
+.fill-blank-text {
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+.blank-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 200px;
+    margin: 0 5px;
+}
+
+.blank-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+}
+
+/* Estilos para arrastrar y soltar */
+.drag-drop-container {
+    margin-top: 20px;
+}
+
+.drag-drop-text {
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+.drag-items-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.drag-item {
+    padding: 10px 15px;
+    background-color: #f0f5ff;
+    border: 2px dashed var(--primary-color);
+    border-radius: 5px;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.2s;
+}
+
+.drag-item:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+
+.drag-item.dragging {
+    opacity: 0.5;
+}
+
+.drop-zones-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.drop-zone {
+    padding: 12px 15px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.drop-zone.hover {
+    border-color: var(--primary-color);
+    background-color: #f0f8ff;
+}
+
+.drop-zone.filled {
+    border-style: solid;
+    border-color: var(--success-color);
+    background-color: #f0fff0;
+}
+
+.dropped-item {
+    padding: 8px 12px;
+    background-color: var(--success-color);
+    color: white;
+    border-radius: 4px;
+    display: inline-block;
+}
+
 .navigation {
     display: flex;
     justify-content: space-between;
