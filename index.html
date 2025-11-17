@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Personal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Examen de Evaluación</h1>
+            <p>Responde todas las preguntas y envía tus respuestas al finalizar</p>
+        </header>
+        
+        <div class="exam-info">
+            <p><strong>Instrucciones:</strong></p>
+            <ul>
+                <li>Selecciona una respuesta para cada pregunta</li>
+                <li>Puedes navegar entre preguntas usando los botones "Anterior" y "Siguiente"</li>
+                <li>Al finalizar, haz clic en "Enviar Examen"</li>
+                <li>Los resultados se guardarán automáticamente en la base de datos</li>
+            </ul>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <div id="question-container" class="question-container">
+            <!-- Las preguntas se cargarán aquí dinámicamente -->
+        </div>
+        
+        <div class="navigation">
+            <button id="prev-btn" disabled>Anterior</button>
+            <button id="next-btn">Siguiente</button>
+        </div>
+        
+        <button id="submit-btn">Enviar Examen</button>
+        
+        <div id="results-container" class="results-container">
+            <h2>Resultados del Examen</h2>
+            <div class="score" id="score"></div>
+            <div id="incorrect-questions" class="incorrect-questions"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
