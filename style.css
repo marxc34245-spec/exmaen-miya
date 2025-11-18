@@ -336,7 +336,28 @@ button:disabled {
     animation: spin 1s linear infinite;
     margin: 0 auto 20px;
 }
+#decor-cat {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    width: 120px;
+    max-width: 28vw;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(60,20,50,0.15);
+    transform-origin: center;
+    pointer-events: none; /* no interfiere con clicks */
+    z-index: 9999;
+    opacity: 0.98;
+    animation: floatCat 6s ease-in-out infinite;
+}
+
+@keyframes floatCat {
+    0%   { transform: translateY(0) rotate(-1deg); }
+    50%  { transform: translateY(-8px) rotate(1deg); }
+    100% { transform: translateY(0) rotate(-1deg); }
+}
 
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
