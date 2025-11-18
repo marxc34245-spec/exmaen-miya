@@ -339,7 +339,7 @@ button:disabled {
 #decor-cat {
     position: fixed;
     right: 18px;
-    bottom: 18px;
+    bottom: 438px;
     width: 120px;
     max-width: 28vw;
     border-radius: 14px;
@@ -360,4 +360,5 @@ button:disabled {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
 
