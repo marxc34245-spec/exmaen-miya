@@ -247,15 +247,16 @@ function renderMultipleChoice(question) {
 }
 
 // Renderizar pregunta verdadero/falso
+// Renderizar pregunta verdadero/falso en japonés
 function renderTrueFalse(question) {
     const userAnswer = userAnswers[currentQuestionIndex];
     return `
         <div class="truefalse-container">
             <div class="truefalse-option true-option ${userAnswer === 0 ? 'selected' : ''}" data-value="0">
-                Verdadero
+                真
             </div>
             <div class="truefalse-option false-option ${userAnswer === 1 ? 'selected' : ''}" data-value="1">
-                Falso
+                偽
             </div>
         </div>
     `;
@@ -627,5 +628,6 @@ if ('mediaSession' in navigator) {
         // Ignorar el error
     }
 }
+
 
 
