@@ -178,7 +178,6 @@ const examData = {
         }
     ]
 };
-
 // Variables de estado
 let currentQuestionIndex = 0;
 let userAnswers = Array(examData.questions.length).fill(null);
@@ -199,7 +198,7 @@ function displayQuestion() {
     const question = examData.questions[currentQuestionIndex];
     
     let questionHTML = `
-        <div class="question-number">Pregunta ${currentQuestionIndex + 1} de ${examData.questions.length}</div>
+        <div class="question-number">問題 ${currentQuestionIndex + 1} / ${examData.questions.length}</div>
         <div class="question-text">${question.text}</div>
     `;
     
@@ -246,17 +245,16 @@ function renderMultipleChoice(question) {
     `;
 }
 
-// Renderizar pregunta verdadero/falso
 // Renderizar pregunta verdadero/falso en japonés
 function renderTrueFalse(question) {
     const userAnswer = userAnswers[currentQuestionIndex];
     return `
         <div class="truefalse-container">
             <div class="truefalse-option true-option ${userAnswer === 0 ? 'selected' : ''}" data-value="0">
-                真
+                真 (Verdadero)
             </div>
             <div class="truefalse-option false-option ${userAnswer === 1 ? 'selected' : ''}" data-value="1">
-                偽
+                偽 (Falso)
             </div>
         </div>
     `;
@@ -359,20 +357,22 @@ function addTrueFalseListeners() {
 // Event listeners para autocompletar
 function addFillBlankListeners() {
     const input = document.querySelector('.blank-input');
-    input.addEventListener('input', () => {
-        if (examSubmitted) return;
-        userAnswers[currentQuestionIndex] = input.value;
-    });
+    if (input) {
+        input.addEventListener('input', () => {
+            if (examSubmitted) return;
+            userAnswers[currentQuestionIndex] = input.value;
+        });
+    }
 }
 
-// Event listeners para arrastrar y soltar
+// Event listeners para arrastrar y soltar - CORREGIDO
 function addDragDropListeners(question) {
     const dragItems = document.querySelectorAll('.drag-item');
     const dropZones = document.querySelectorAll('.drop-zone');
     
     // Configurar elementos arrastrables
     dragItems.forEach(item => {
-        item.addEventListener('dragstart', dragStart);
+        item.addEventListener('dragstart', (e) => dragStart(e, question));
         item.addEventListener('dragend', dragEnd);
     });
     
@@ -383,48 +383,65 @@ function addDragDropListeners(question) {
         zone.addEventListener('dragleave', dragLeave);
         zone.addEventListener('drop', (e) => drop(e, question));
     });
+}
+
+function dragStart(e, question) {
+    if (examSubmitted) return;
     
-    function dragStart(e) {
-        if (examSubmitted) return;
-        e.dataTransfer.setData('text/plain', e.target.getAttribute('data-index'));
-        setTimeout(() => {
-            e.target.classList.add('dragging');
-        }, 0);
-    }
+    // Verificar que el target sea un elemento válido
+    const target = e.target.closest('.drag-item');
+    if (!target) return;
     
-    function dragEnd(e) {
-        e.target.classList.remove('dragging');
+    e.dataTransfer.setData('text/plain', target.getAttribute('data-index'));
+    setTimeout(() => {
+        target.classList.add('dragging');
+    }, 0);
+}
+
+function dragEnd(e) {
+    const target = e.target.closest('.drag-item');
+    if (target) {
+        target.classList.remove('dragging');
     }
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function dragEnter(e) {
+    e.preventDefault();
+    const target = e.target.closest('.drop-zone');
+    if (target) {
+        target.classList.add('hover');
+    }
+}
+
+function dragLeave(e) {
+    const target = e.target.closest('.drop-zone');
+    if (target) {
+        target.classList.remove('hover');
+    }
+}
+
+function drop(e, question) {
+    e.preventDefault();
+    const zone = e.target.closest('.drop-zone');
+    if (!zone) return;
     
-    function dragOver(e) {
-        e.preventDefault();
-    }
+    zone.classList.remove('hover');
     
-    function dragEnter(e) {
-        e.preventDefault();
-        e.target.classList.add('hover');
-    }
+    const itemIndex = e.dataTransfer.getData('text/plain');
+    const zoneIndex = parseInt(zone.getAttribute('data-index'));
     
-    function dragLeave(e) {
-        e.target.classList.remove('hover');
+    // Actualizar respuesta del usuario
+    if (!userAnswers[currentQuestionIndex]) {
+        userAnswers[currentQuestionIndex] = Array(question.parts.length).fill(null);
     }
+    userAnswers[currentQuestionIndex][zoneIndex] = parseInt(itemIndex);
     
-    function drop(e, question) {
-        e.preventDefault();
-        e.target.classList.remove('hover');
-        
-        const itemIndex = e.dataTransfer.getData('text/plain');
-        const zoneIndex = parseInt(e.target.getAttribute('data-index'));
-        
-        // Actualizar respuesta del usuario
-        if (!userAnswers[currentQuestionIndex]) {
-            userAnswers[currentQuestionIndex] = Array(question.parts.length).fill(null);
-        }
-        userAnswers[currentQuestionIndex][zoneIndex] = parseInt(itemIndex);
-        
-        // Actualizar la vista
-        displayQuestion();
-    }
+    // Actualizar la vista
+    displayQuestion();
 }
 
 // Navegación entre preguntas
@@ -459,7 +476,7 @@ submitBtn.addEventListener('click', async () => {
     });
     
     if (unanswered) {
-        alert('Por favor, responde todas las preguntas antes de enviar el examen.');
+        alert('すべての質問に答えてから試験を送信してください。'); // Por favor, responde todas las preguntas
         return;
     }
     
@@ -475,7 +492,7 @@ submitBtn.addEventListener('click', async () => {
     if (saveSuccess) {
         examSubmitted = true;
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Examen Enviado';
+        submitBtn.textContent = '試験送信済み';
     }
 });
 
@@ -494,11 +511,11 @@ function calculateResults() {
                 isCorrect = userAnswer === question.correctAnswer;
                 break;
             case "fillblank":
-                isCorrect = userAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
+                isCorrect = userAnswer && userAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
                 break;
             case "dragdrop":
                 isCorrect = question.parts.every((part, partIndex) => {
-                    return userAnswer[partIndex] === part.correctPosition;
+                    return userAnswer && userAnswer[partIndex] === part.correctPosition;
                 });
                 break;
         }
@@ -511,20 +528,20 @@ function calculateResults() {
             
             switch(question.type) {
                 case "multiple":
-                    userAnswerText = question.options[userAnswer];
+                    userAnswerText = question.options[userAnswer] || "No respondida";
                     correctAnswerText = question.options[question.correctAnswer];
                     break;
                 case "truefalse":
-                    userAnswerText = userAnswer === 0 ? "Verdadero" : "Falso";
-                    correctAnswerText = question.correctAnswer === 0 ? "Verdadero" : "Falso";
+                    userAnswerText = userAnswer === 0 ? "真 (Verdadero)" : userAnswer === 1 ? "偽 (Falso)" : "No respondida";
+                    correctAnswerText = question.correctAnswer === 0 ? "真 (Verdadero)" : "偽 (Falso)";
                     break;
                 case "fillblank":
-                    userAnswerText = userAnswer;
+                    userAnswerText = userAnswer || "No respondida";
                     correctAnswerText = question.correctAnswer;
                     break;
                 case "dragdrop":
-                    userAnswerText = question.parts.map((part, partIndex) => 
-                        question.options[userAnswer[partIndex]]).join(", ");
+                    userAnswerText = userAnswer ? question.parts.map((part, partIndex) => 
+                        question.options[userAnswer[partIndex]]).join(", ") : "No respondida";
                     correctAnswerText = question.parts.map(part => 
                         question.options[part.correctPosition]).join(", ");
                     break;
@@ -534,7 +551,7 @@ function calculateResults() {
                 question: question.text,
                 userAnswer: userAnswerText,
                 correctAnswer: correctAnswerText,
-                explanation: question.explanation // ← Agregamos la explicación aquí
+                explanation: question.explanation
             });
         }
     });
@@ -548,50 +565,77 @@ function calculateResults() {
         incorrectQuestions
     };
 }
+
 // Mostrar resultados
 function displayResults(results) {
-    scoreElement.textContent = `Puntuación: ${results.score}% (${results.correctAnswers} de ${results.totalQuestions} correctas)`;
+    scoreElement.textContent = `得点: ${results.score}% (${results.correctAnswers} / ${results.totalQuestions} 正解)`;
     
     if (results.incorrectQuestions.length > 0) {
         incorrectQuestionsContainer.innerHTML = `
-            <h3>Preguntas incorrectas:</h3>
+            <h3>間違えた問題:</h3>
             ${results.incorrectQuestions.map(question => `
                 <div class="incorrect-question">
-                    <p><strong>Pregunta:</strong> ${question.question}</p>
-                    <p><span class="user-answer">Tu respuesta:</span> ${question.userAnswer}</p>
-                    <p><span class="correct-answer">Respuesta correcta:</span> ${question.correctAnswer}</p>
-                    <p><span class="explanation">Explicación:</span> ${question.explanation}</p>
+                    <p><strong>問題:</strong> ${question.question}</p>
+                    <p><span class="user-answer">あなたの答え:</span> ${question.userAnswer}</p>
+                    <p><span class="correct-answer">正解:</span> ${question.correctAnswer}</p>
+                    <p><span class="explanation">説明:</span> ${question.explanation}</p>
                 </div>
             `).join('')}
         `;
     } else {
-        incorrectQuestionsContainer.innerHTML = '<p>¡Felicidades! Has respondido correctamente a todas las preguntas.</p>';
+        incorrectQuestionsContainer.innerHTML = '<p>おめでとうございます！すべての問題に正解しました。</p>';
     }
     
     resultsContainer.style.display = 'block';
     resultsContainer.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Guardar resultados en Firebase
+// Guardar resultados en Firebase - CORREGIDO
 async function saveResultsToFirestore(results) {
     try {
         // Mostrar indicador de carga
         questionContainer.innerHTML = `
             <div class="loading">
                 <div class="spinner"></div>
-                <p>Enviando resultados a la base de datos...</p>
+                <p>データベースに結果を送信中...</p>
             </div>
         `;
         
-        const docRef = await addDoc(collection(db, "examResults"), {
+        // Preparar datos para Firebase (evitar arrays anidados)
+        const firestoreData = {
             examTitle: examData.title,
             score: results.score,
             correctAnswers: results.correctAnswers,
             totalQuestions: examData.questions.length,
-            incorrectQuestions: results.incorrectQuestions,
-            userAnswers: userAnswers,
             timestamp: serverTimestamp()
+        };
+        
+        // Convertir userAnswers a formato compatible con Firestore
+        const formattedUserAnswers = userAnswers.map((answer, index) => {
+            const question = examData.questions[index];
+            
+            if (question.type === "dragdrop" && Array.isArray(answer)) {
+                // Para dragdrop, convertir array a objeto
+                const dragDropAnswer = {};
+                answer.forEach((item, posIndex) => {
+                    dragDropAnswer[`pos_${posIndex}`] = item;
+                });
+                return {
+                    type: "dragdrop",
+                    value: dragDropAnswer
+                };
+            } else {
+                return {
+                    type: question.type,
+                    value: answer
+                };
+            }
         });
+        
+        firestoreData.userAnswers = formattedUserAnswers;
+        firestoreData.incorrectQuestions = results.incorrectQuestions;
+        
+        const docRef = await addDoc(collection(db, "examResults"), firestoreData);
         
         console.log("Resultados guardados con ID: ", docRef.id);
         
@@ -601,12 +645,14 @@ async function saveResultsToFirestore(results) {
     } catch (e) {
         console.error("Error al guardar los resultados: ", e);
         
-        let errorMessage = "Hubo un error al guardar los resultados. ";
+        let errorMessage = "結果の保存中にエラーが発生しました。 ";
         
         if (e.code === 'permission-denied') {
-            errorMessage += "Error de permisos. Verifica las reglas de Firestore.";
+            errorMessage += "権限エラー。Firestoreのルールを確認してください。";
+        } else if (e.message.includes('Nested arrays')) {
+            errorMessage += "データ形式に問題があります。";
         } else {
-            errorMessage += "Por favor, inténtalo de nuevo.";
+            errorMessage += "もう一度お試しください。";
         }
         
         alert(errorMessage);
@@ -619,15 +665,3 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
-
-// Silenciar el error de MediaSession (no afecta la funcionalidad)
-if ('mediaSession' in navigator) {
-    try {
-        navigator.mediaSession.setActionHandler('enterpictureinpicture', null);
-    } catch (e) {
-        // Ignorar el error
-    }
-}
-
-
-
