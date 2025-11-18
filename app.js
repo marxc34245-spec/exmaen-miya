@@ -18,43 +18,148 @@ const db = getFirestore(app);
 
 // Datos del examen con diferentes tipos de preguntas
 const examData = {
-    title: "Examen de Conocimientos Generales",
+    title: "スペイン語初級テスト", // Examen Básico de Español
     questions: [
         {
             id: 1,
             type: "multiple",
-            text: "¿Cuál es la capital de Francia?",
-            options: ["Londres", "Berlín", "París", "Madrid"],
-            correctAnswer: 2
+            text: "スペイン語で『私は食べます』は何と言いますか？", // ¿Cómo se dice "Yo como" en español?
+            options: [
+                "Yo como",
+                "Yo bebo", 
+                "Yo hablo",
+                "Yo duermo"
+            ],
+            correctAnswer: 0
         },
         {
             id: 2,
-            type: "truefalse",
-            text: "La Tierra es el tercer planeta del sistema solar.",
-            correctAnswer: 0 // 0 para verdadero, 1 para falso
+            type: "multiple",
+            text: "『Ella habla』の意味はどれですか？", // ¿Qué significa "Ella habla"?
+            options: [
+                "彼女は話します",
+                "彼女は食べます", 
+                "彼女は寝ます",
+                "彼女は遊びます"
+            ],
+            correctAnswer: 0
         },
         {
             id: 3,
-            type: "fillblank",
-            text: "La capital de España es ________.",
-            correctAnswer: "Madrid"
+            type: "truefalse",
+            text: "『Nosotros jugamos』は『私たちは遊びます』という意味です。", // "Nosotros jugamos" significa "Watashitachi wa asobimasu"
+            correctAnswer: 0
         },
         {
             id: 4,
-            type: "dragdrop",
-            text: "Arrastra las palabras a los espacios correctos: El ________ es el autor de 'Cien años de ________'.",
-            parts: [
-                { text: "Gabriel García Márquez", correctPosition: 0 },
-                { text: "soledad", correctPosition: 1 }
-            ],
-            options: ["Gabriel García Márquez", "Pablo Neruda", "soledad", "esperanza"]
+            type: "fillblank",
+            text: "スペイン語で『水』は________です。", // La palabra para "agua" en español es ________
+            correctAnswer: "agua"
         },
         {
             id: 5,
+            type: "dragdrop",
+            text: "スペイン語の動詞を正しい意味にドラッグしてください: ________ は『食べる』、________ は『飲む』、________ は『話す』",
+            parts: [
+                { text: "comer", correctPosition: 0 },
+                { text: "beber", correctPosition: 1 },
+                { text: "hablar", correctPosition: 2 }
+            ],
+            options: ["comer", "beber", "hablar", "dormir", "jugar"]
+        },
+        {
+            id: 6,
             type: "multiple",
-            text: "¿Cuál es el río más largo del mundo?",
-            options: ["Nilo", "Amazonas", "Misisipi", "Yangtsé"],
-            correctAnswer: 1
+            text: "『Yo bebo agua』の正しい日本語訳はどれですか？", // ¿Cuál es la traducción correcta al japonés de "Yo bebo agua"?
+            options: [
+                "私は水を飲みます",
+                "私は水を食べます", 
+                "私は水を見ます",
+                "私は水を聞きます"
+            ],
+            correctAnswer: 0
+        },
+        {
+            id: 7,
+            type: "truefalse",
+            text: "スペイン語の『ser』と『estar』は両方とも『です』という意味です。", // "ser" y "estar" en español ambos significan "desu"
+            correctAnswer: 1 // Falso - tienen usos diferentes
+        },
+        {
+            id: 8,
+            type: "fillblank",
+            text: "スペイン語で『寝る』は________です。", // "Dormir" en español es ________
+            correctAnswer: "dormir"
+        },
+        {
+            id: 9,
+            type: "dragdrop",
+            text: "代名詞を正しいスペイン語にドラッグしてください: ________ は『私』、________ は『あなた』、________ は『彼』",
+            parts: [
+                { text: "yo", correctPosition: 0 },
+                { text: "tú", correctPosition: 1 },
+                { text: "él", correctPosition: 2 }
+            ],
+            options: ["yo", "tú", "él", "ella", "nosotros"]
+        },
+        {
+            id: 10,
+            type: "multiple",
+            text: "『Ellos ven la televisión』の意味は何ですか？", // ¿Qué significa "Ellos ven la televisión"?
+            options: [
+                "彼らはテレビを見ます",
+                "彼らはテレビを聞きます", 
+                "彼らはテレビを食べます",
+                "彼らはテレビで遊びます"
+            ],
+            correctAnswer: 0
+        },
+        {
+            id: 11,
+            type: "fillblank",
+            text: "スペイン語で『聞く』は________です。", // "Escuchar" en español es ________
+            correctAnswer: "escuchar"
+        },
+        {
+            id: 12,
+            type: "multiple",
+            text: "『Gracias』の正しい返事はどれですか？", // ¿Cuál es la respuesta correcta para "Gracias"?
+            options: [
+                "De nada",
+                "Por favor", 
+                "Lo siento",
+                "Buenos días"
+            ],
+            correctAnswer: 0
+        },
+        {
+            id: 13,
+            type: "truefalse",
+            text: "『Buenos días』は夜にも使えます。", // "Buenos días" se puede usar por la noche también
+            correctAnswer: 1 // Falso - solo por la mañana
+        },
+        {
+            id: 14,
+            type: "dragdrop",
+            text: "あいさつを正しいスペイン語にドラッグしてください: ________ は『おはよう』、________ は『こんにちは』、________ は『こんばんは』",
+            parts: [
+                { text: "Buenos días", correctPosition: 0 },
+                { text: "Buenas tardes", correctPosition: 1 },
+                { text: "Buenas noches", correctPosition: 2 }
+            ],
+            options: ["Buenos días", "Buenas tardes", "Buenas noches", "Hola", "Adiós"]
+        },
+        {
+            id: 15,
+            type: "multiple",
+            text: "スペイン語で『私は日本語を話します』は何と言いますか？", // ¿Cómo se dice "Yo hablo japonés" en español?
+            options: [
+                "Yo hablo japonés",
+                "Yo como japonés", 
+                "Yo bebo japonés",
+                "Yo veo japonés"
+            ],
+            correctAnswer: 0
         }
     ]
 };
@@ -506,3 +611,4 @@ if ('mediaSession' in navigator) {
         // Ignorar el error
     }
 }
+
