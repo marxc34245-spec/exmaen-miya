@@ -338,12 +338,11 @@ button:disabled {
 }
 #decor-cat {
     position: fixed;
-    right: 18px;
-    bottom: 438px;
+    right: 2px;
+    bottom: 430px; /* moved up from 18px */
     width: 120px;
     max-width: 28vw;
     border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(60,20,50,0.15);
     transform-origin: center;
     pointer-events: none; /* no interfiere con clicks */
     z-index: 9999;
@@ -360,5 +359,6 @@ button:disabled {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
 
 
