@@ -18,43 +18,47 @@ const db = getFirestore(app);
 
 // Datos del examen con diferentes tipos de preguntas
 const examData = {
-    title: "スペイン語初級テスト", // Examen Básico de Español
+    title: "スペイン語初級テスト",
     questions: [
         {
             id: 1,
             type: "multiple",
-            text: "スペイン語で『私は食べます』は何と言いますか？", // ¿Cómo se dice "Yo como" en español?
+            text: "スペイン語で『私は食べます』は何と言いますか？",
             options: [
                 "Yo como",
                 "Yo bebo", 
                 "Yo hablo",
                 "Yo duermo"
             ],
-            correctAnswer: 0
+            correctAnswer: 0,
+            explanation: "『Yo como』は『私は食べます』という意味です。『comer』は『食べる』という動詞です。"
         },
         {
             id: 2,
             type: "multiple",
-            text: "『Ella habla』の意味はどれですか？", // ¿Qué significa "Ella habla"?
+            text: "『Ella habla』の意味はどれですか？",
             options: [
                 "彼女は話します",
                 "彼女は食べます", 
                 "彼女は寝ます",
                 "彼女は遊びます"
             ],
-            correctAnswer: 0
+            correctAnswer: 0,
+            explanation: "『hablar』は『話す』という動詞です。『Ella』は『彼女』を意味します。"
         },
         {
             id: 3,
             type: "truefalse",
-            text: "『Nosotros jugamos』は『私たちは遊びます』という意味です。", // "Nosotros jugamos" significa "Watashitachi wa asobimasu"
-            correctAnswer: 0
+            text: "『Nosotros jugamos』は『私たちは遊びます』という意味です。",
+            correctAnswer: 0,
+            explanation: "正解です！『jugar』は『遊ぶ』、『Nosotros』は『私たち』という意味です。"
         },
         {
             id: 4,
             type: "fillblank",
-            text: "スペイン語で『水』は________です。", // La palabra para "agua" en español es ________
-            correctAnswer: "agua"
+            text: "スペイン語で『水』は________です。",
+            correctAnswer: "agua",
+            explanation: "『agua』はスペイン語で『水』を意味します。女性名詞ですが、定冠詞は『el agua』のように男性形を使います。"
         },
         {
             id: 5,
@@ -65,31 +69,35 @@ const examData = {
                 { text: "beber", correctPosition: 1 },
                 { text: "hablar", correctPosition: 2 }
             ],
-            options: ["comer", "beber", "hablar", "dormir", "jugar"]
+            options: ["comer", "beber", "hablar", "dormir", "jugar"],
+            explanation: "基本動詞の確認: comer(食べる), beber(飲む), hablar(話す), dormir(寝る), jugar(遊ぶ)"
         },
         {
             id: 6,
             type: "multiple",
-            text: "『Yo bebo agua』の正しい日本語訳はどれですか？", // ¿Cuál es la traducción correcta al japonés de "Yo bebo agua"?
+            text: "『Yo bebo agua』の正しい日本語訳はどれですか？",
             options: [
                 "私は水を飲みます",
                 "私は水を食べます", 
                 "私は水を見ます",
                 "私は水を聞きます"
             ],
-            correctAnswer: 0
+            correctAnswer: 0,
+            explanation: "『beber』は『飲む』、『agua』は『水』を意味します。英語の『drink』に相当します。"
         },
         {
             id: 7,
             type: "truefalse",
-            text: "スペイン語の『ser』と『estar』は両方とも『です』という意味です。", // "ser" y "estar" en español ambos significan "desu"
-            correctAnswer: 1 // Falso - tienen usos diferentes
+            text: "スペイン語の『ser』と『estar』は両方とも『です』という意味です。",
+            correctAnswer: 1,
+            explanation: "『ser』は永続的な特性（国籍、職業など）、『estar』は一時的な状態（場所、感情など）に使います。日本語の『です』とは使い方が異なります。"
         },
         {
             id: 8,
             type: "fillblank",
-            text: "スペイン語で『寝る』は________です。", // "Dormir" en español es ________
-            correctAnswer: "dormir"
+            text: "スペイン語で『寝る』は________です。",
+            correctAnswer: "dormir",
+            explanation: "『dormir』は『寝る』という意味の動詞です。不規則動詞で、『yo duermo』（私は寝ます）のように変化します。"
         },
         {
             id: 9,
@@ -100,43 +108,48 @@ const examData = {
                 { text: "tú", correctPosition: 1 },
                 { text: "él", correctPosition: 2 }
             ],
-            options: ["yo", "tú", "él", "ella", "nosotros"]
+            options: ["yo", "tú", "él", "ella", "nosotros"],
+            explanation: "主語代名詞: yo(私), tú(君/あなた), él(彼), ella(彼女), nosotros(私たち)"
         },
         {
             id: 10,
             type: "multiple",
-            text: "『Ellos ven la televisión』の意味は何ですか？", // ¿Qué significa "Ellos ven la televisión"?
+            text: "『Ellos ven la televisión』の意味は何ですか？",
             options: [
                 "彼らはテレビを見ます",
                 "彼らはテレビを聞きます", 
                 "彼らはテレビを食べます",
                 "彼らはテレビで遊びます"
             ],
-            correctAnswer: 0
+            correctAnswer: 0,
+            explanation: "『ver』は『見る』、『la televisión』は『テレビ』を意味します。『Ellos』は『彼ら』（男性）です。"
         },
         {
             id: 11,
             type: "fillblank",
-            text: "スペイン語で『聞く』は________です。", // "Escuchar" en español es ________
-            correctAnswer: "escuchar"
+            text: "スペイン語で『聞く』は________です。",
+            correctAnswer: "escuchar",
+            explanation: "『escuchar』は『聞く、聴く』という意味です。『oír』も『聞く』ですが、『escuchar』は注意して聞くニュアンスがあります。"
         },
         {
             id: 12,
             type: "multiple",
-            text: "『Gracias』の正しい返事はどれですか？", // ¿Cuál es la respuesta correcta para "Gracias"?
+            text: "『Gracias』の正しい返事はどれですか？",
             options: [
                 "De nada",
                 "Por favor", 
                 "Lo siento",
                 "Buenos días"
             ],
-            correctAnswer: 0
+            correctAnswer: 0,
+            explanation: "『Gracias』（ありがとう）に対する返事は『De nada』（どういたしまして）です。"
         },
         {
             id: 13,
             type: "truefalse",
-            text: "『Buenos días』は夜にも使えます。", // "Buenos días" se puede usar por la noche también
-            correctAnswer: 1 // Falso - solo por la mañana
+            text: "『Buenos días』は夜にも使えます。",
+            correctAnswer: 1,
+            explanation: "『Buenos días』は朝（〜正午頃まで）に使う挨拶です。昼は『Buenas tardes』、夜は『Buenas noches』を使います。"
         },
         {
             id: 14,
@@ -147,19 +160,21 @@ const examData = {
                 { text: "Buenas tardes", correctPosition: 1 },
                 { text: "Buenas noches", correctPosition: 2 }
             ],
-            options: ["Buenos días", "Buenas tardes", "Buenas noches", "Hola", "Adiós"]
+            options: ["Buenos días", "Buenas tardes", "Buenas noches", "Hola", "Adiós"],
+            explanation: "時間帯による挨拶: Buenos días(おはよう), Buenas tardes(こんにちは), Buenas noches(こんばんは)"
         },
         {
             id: 15,
             type: "multiple",
-            text: "スペイン語で『私は日本語を話します』は何と言いますか？", // ¿Cómo se dice "Yo hablo japonés" en español?
+            text: "スペイン語で『私は日本語を話します』は何と言いますか？",
             options: [
                 "Yo hablo japonés",
                 "Yo como japonés", 
                 "Yo bebo japonés",
                 "Yo veo japonés"
             ],
-            correctAnswer: 0
+            correctAnswer: 0,
+            explanation: "『hablar』は『話す』、『japonés』は『日本語』を意味します。言語を話す場合は『hablar + 言語名』を使います。"
         }
     ]
 };
@@ -517,7 +532,8 @@ function calculateResults() {
             incorrectQuestions.push({
                 question: question.text,
                 userAnswer: userAnswerText,
-                correctAnswer: correctAnswerText
+                correctAnswer: correctAnswerText,
+                explanation: question.explanation // ← Agregamos la explicación aquí
             });
         }
     });
@@ -531,7 +547,6 @@ function calculateResults() {
         incorrectQuestions
     };
 }
-
 // Mostrar resultados
 function displayResults(results) {
     scoreElement.textContent = `Puntuación: ${results.score}% (${results.correctAnswers} de ${results.totalQuestions} correctas)`;
@@ -544,6 +559,7 @@ function displayResults(results) {
                     <p><strong>Pregunta:</strong> ${question.question}</p>
                     <p><span class="user-answer">Tu respuesta:</span> ${question.userAnswer}</p>
                     <p><span class="correct-answer">Respuesta correcta:</span> ${question.correctAnswer}</p>
+                    <p><span class="explanation">Explicación:</span> ${question.explanation}</p>
                 </div>
             `).join('')}
         `;
@@ -611,4 +627,5 @@ if ('mediaSession' in navigator) {
         // Ignorar el error
     }
 }
+
 
