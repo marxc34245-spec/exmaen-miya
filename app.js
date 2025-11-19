@@ -17,164 +17,165 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Datos del examen con diferentes tipos de preguntas
+// Datos del examen actualizado con nuevos verbos y pronombres
 const examData = {
-    title: "スペイン語初級テスト",
+    title: "スペイン語初級テスト - Verbos y Pronombres",
     questions: [
         {
             id: 1,
             type: "multiple",
-            text: "スペイン語で『私は食べます』は何と言いますか？",
+            text: "スペイン語で『私はします』は何と言いますか？",
             options: [
-                "Yo como",
-                "Yo bebo", 
-                "Yo hablo",
-                "Yo duermo"
+                "Yo hago",
+                "Yo soy", 
+                "Yo estoy",
+                "Yo voy"
             ],
             correctAnswer: 0,
-            explanation: "『Yo como』は『私は食べます』という意味です。『comer』は『食べる』という動詞です。"
+            explanation: "『Yo hago』は『私はします』という意味です。『hacer』は『する』という動詞です。"
         },
         {
             id: 2,
             type: "multiple",
-            text: "『Ella habla』の意味はどれですか？",
+            text: "『Ellos son』の正しい意味はどれですか？",
             options: [
-                "彼女は話します",
-                "彼女は食べます", 
-                "彼女は寝ます",
-                "彼女は遊びます"
+                "彼らはです（特性）",
+                "彼らはいます", 
+                "彼らはします",
+                "彼らは行きます"
             ],
             correctAnswer: 0,
-            explanation: "『hablar』は『話す』という動詞です。『Ella』は『彼女』を意味します。"
+            explanation: "『ser』は永続的な特性を表し、『son』は『ellos』に対する形です。"
         },
         {
             id: 3,
             type: "truefalse",
-            text: "『Nosotros jugamos』は『私たちは遊びます』という意味です。",
+            text: "『Yo estoy』は『私はいます』という意味です。",
             correctAnswer: 0,
-            explanation: "正解です！『jugar』は『遊ぶ』、『Nosotros』は『私たち』という意味です。"
+            explanation: "正解です！『estar』は状態や場所を表し、『yo estoy』は『私はいます』という意味です。"
         },
         {
             id: 4,
             type: "fillblank",
-            text: "スペイン語で『水』は________です。",
-            correctAnswer: "agua",
-            explanation: "『agua』はスペイン語で『水』を意味します。女性名詞ですが、定冠詞は『el agua』のように男性形を使います。"
+            text: "スペイン語で『私たち』は________です。",
+            correctAnswer: "nosotros",
+            explanation: "『nosotros』は『私たち』を意味する主語代名詞です。女性のみのグループの場合は『nosotras』を使います。"
         },
         {
             id: 5,
             type: "dragdrop",
-            text: "スペイン語の動詞を正しい意味にドラッグしてください: ________ は『食べる』、________ は『飲む』、________ は『話す』",
+            text: "動詞を正しい意味にドラッグしてください: ________ は『する』、________ は『いる/ある』、________ は『です』",
             parts: [
-                { text: "comer", correctPosition: 0 },
-                { text: "beber", correctPosition: 1 },
-                { text: "hablar", correctPosition: 2 }
+                { text: "hacer", correctPosition: 0 },
+                { text: "estar", correctPosition: 1 },
+                { text: "ser", correctPosition: 2 }
             ],
-            options: ["comer", "beber", "hablar", "dormir", "jugar"],
-            explanation: "基本動詞の確認: comer(食べる), beber(飲む), hablar(話す), dormir(寝る), jugar(遊ぶ)"
+            options: ["ser", "estar", "hacer", "comer", "beber"],
+            explanation: "基本動詞: ser(です), estar(いる/ある), hacer(する), comer(食べる), beber(飲む)"
         },
         {
             id: 6,
             type: "multiple",
-            text: "『Yo bebo agua』の正しい日本語訳はどれですか？",
+            text: "『Tú hablas』の正しい日本語訳はどれですか？",
             options: [
-                "私は水を飲みます",
-                "私は水を食べます", 
-                "私は水を見ます",
-                "私は水を聞きます"
+                "あなたは話します",
+                "あなたは食べます", 
+                "あなたは行きます",
+                "あなたは来ます"
             ],
             correctAnswer: 0,
-            explanation: "『beber』は『飲む』、『agua』は『水』を意味します。英語の『drink』に相当します。"
+            explanation: "『hablar』は『話す』、『tú』は『あなた』を意味します。"
         },
         {
             id: 7,
             type: "truefalse",
-            text: "スペイン語の『ser』と『estar』は両方とも『です』という意味です。",
-            correctAnswer: 1,
-            explanation: "『ser』は永続的な特性（国籍、職業など）、『estar』は一時的な状態（場所、感情など）に使います。日本語の『です』とは使い方が異なります。"
+            text: "『Vosotros coméis』は『あなたたちは食べます』という意味です。",
+            correctAnswer: 0,
+            explanation: "正解です！『vosotros』はスペインで使われる『あなたたち』、『coméis』は『comer』のvosotros形です。"
         },
         {
             id: 8,
             type: "fillblank",
-            text: "スペイン語で『寝る』は________です。",
-            correctAnswer: "dormir",
-            explanation: "『dormir』は『寝る』という意味の動詞です。不規則動詞で、『yo duermo』（私は寝ます）のように変化します。"
+            text: "スペイン語で『彼女』は________です。",
+            correctAnswer: "ella",
+            explanation: "『ella』は『彼女』を意味する主語代名詞です。"
         },
         {
             id: 9,
             type: "dragdrop",
-            text: "代名詞を正しいスペイン語にドラッグしてください: ________ は『私』、________ は『あなた』、________ は『彼』",
+            text: "動詞を正しい意味にドラッグしてください: ________ は『行く』、________ は『来る』、________ は『見る』",
             parts: [
-                { text: "yo", correctPosition: 0 },
-                { text: "tú", correctPosition: 1 },
-                { text: "él", correctPosition: 2 }
+                { text: "ir", correctPosition: 0 },
+                { text: "venir", correctPosition: 1 },
+                { text: "ver", correctPosition: 2 }
+            ],
+            options: ["ir", "venir", "ver", "escuchar", "jugar"],
+            explanation: "移動・知覚動詞: ir(行く), venir(来る), ver(見る), escuchar(聞く), jugar(遊ぶ)"
+        },
+        {
+            id: 10,
+            type: "multiple",
+            text: "『Nosotros escuchamos』の意味は何ですか？",
+            options: [
+                "私たちは聞きます",
+                "私たちは話します", 
+                "私たちは遊びます",
+                "私たちは寝ます"
+            ],
+            correctAnswer: 0,
+            explanation: "『escuchar』は『聞く』、『nosotros』は『私たち』を意味します。"
+        },
+        {
+            id: 11,
+            type: "fillblank",
+            text: "スペイン語で『彼ら』は________です。",
+            correctAnswer: "ellos",
+            explanation: "『ellos』は『彼ら』を意味する主語代名詞です。女性のみのグループの場合は『ellas』を使います。"
+        },
+        {
+            id: 12,
+            type: "multiple",
+            text: "『Ella juega』の正しい意味はどれですか？",
+            options: [
+                "彼女は遊びます",
+                "彼女は寝ます", 
+                "彼女は食べます",
+                "彼女は飲みます"
+            ],
+            correctAnswer: 0,
+            explanation: "『jugar』は『遊ぶ』、『ella』は『彼女』を意味します。"
+        },
+        {
+            id: 13,
+            type: "truefalse",
+            text: "『Yo voy』と『Yo vengo』は同じ意味です。",
+            correctAnswer: 1,
+            explanation: "違います！『ir』は『行く』、『venir』は『来る』で、移動の方向が逆です。"
+        },
+        {
+            id: 14,
+            type: "dragdrop",
+            text: "代名詞を正しいスペイン語にドラッグしてください: ________ は『あなた』、________ は『彼』、________ は『私たち』",
+            parts: [
+                { text: "tú", correctPosition: 0 },
+                { text: "él", correctPosition: 1 },
+                { text: "nosotros", correctPosition: 2 }
             ],
             options: ["yo", "tú", "él", "ella", "nosotros"],
             explanation: "主語代名詞: yo(私), tú(君/あなた), él(彼), ella(彼女), nosotros(私たち)"
         },
         {
-            id: 10,
-            type: "multiple",
-            text: "『Ellos ven la televisión』の意味は何ですか？",
-            options: [
-                "彼らはテレビを見ます",
-                "彼らはテレビを聞きます", 
-                "彼らはテレビを食べます",
-                "彼らはテレビで遊びます"
-            ],
-            correctAnswer: 0,
-            explanation: "『ver』は『見る』、『la televisión』は『テレビ』を意味します。『Ellos』は『彼ら』（男性）です。"
-        },
-        {
-            id: 11,
-            type: "fillblank",
-            text: "スペイン語で『聞く』は________です。",
-            correctAnswer: "escuchar",
-            explanation: "『escuchar』は『聞く、聴く』という意味です。『oír』も『聞く』ですが、『escuchar』は注意して聞くニュアンスがあります。"
-        },
-        {
-            id: 12,
-            type: "multiple",
-            text: "『Gracias』の正しい返事はどれですか？",
-            options: [
-                "De nada",
-                "Por favor", 
-                "Lo siento",
-                "Buenos días"
-            ],
-            correctAnswer: 0,
-            explanation: "『Gracias』（ありがとう）に対する返事は『De nada』（どういたしまして）です。"
-        },
-        {
-            id: 13,
-            type: "truefalse",
-            text: "『Buenos días』は夜にも使えます。",
-            correctAnswer: 1,
-            explanation: "『Buenos días』は朝（〜正午頃まで）に使う挨拶です。昼は『Buenas tardes』、夜は『Buenas noches』を使います。"
-        },
-        {
-            id: 14,
-            type: "dragdrop",
-            text: "あいさつを正しいスペイン語にドラッグしてください: ________ は『おはよう』、________ は『こんにちは』、________ は『こんばんは』",
-            parts: [
-                { text: "Buenos días", correctPosition: 0 },
-                { text: "Buenas tardes", correctPosition: 1 },
-                { text: "Buenas noches", correctPosition: 2 }
-            ],
-            options: ["Buenos días", "Buenas tardes", "Buenas noches", "Hola", "Adiós"],
-            explanation: "時間帯による挨拶: Buenos días(おはよう), Buenas tardes(こんにちは), Buenas noches(こんばんは)"
-        },
-        {
             id: 15,
             type: "multiple",
-            text: "スペイン語で『私は日本語を話します』は何と言いますか？",
+            text: "スペイン語で『あなたたちは飲みます』は何と言いますか？",
             options: [
-                "Yo hablo japonés",
-                "Yo como japonés", 
-                "Yo bebo japonés",
-                "Yo veo japonés"
+                "Vosotros bebéis",
+                "Vosotros coméis", 
+                "Ustedes beben",
+                "Ellos beben"
             ],
             correctAnswer: 0,
-            explanation: "『hablar』は『話す』、『japonés』は『日本語』を意味します。言語を話す場合は『hablar + 言語名』を使います。"
+            explanation: "『vosotros bebéis』はスペインの『あなたたちは飲みます』、『ustedes beben』はラテンアメリカで使われます。"
         }
     ]
 };
@@ -665,3 +666,4 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
