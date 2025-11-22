@@ -22,7 +22,6 @@ const examData = {
     title: "スペイン語総合テスト - 動詞、代名詞、前置詞",
     questions: [
         {
-   {
     id: 1,
     type: "multiple",
     text: "スペイン語で『ペルーへ行きます』は何と言いますか？",
@@ -721,6 +720,7 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
 
 
 
