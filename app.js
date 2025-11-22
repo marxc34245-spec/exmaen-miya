@@ -17,168 +17,170 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Datos del examen con diferentes tipos de preguntas
-// Datos del examen actualizado con nuevos verbos y pronombres
+// Datos del examen para practicar japonés - Verbos y Pronombres
 const examData = {
-    title: "スペイン語初級テスト - Verbos y Pronombres",
+    title: "日本語テスト - Verbos y Pronombres",
     questions: [
         {
             id: 1,
             type: "multiple",
-            text: "スペイン語で『私はします』は何と言いますか？",
+            text: "¿Cómo se dice 'yo' en japonés?",
             options: [
-                "Yo hago",
-                "Yo soy", 
-                "Yo estoy",
-                "Yo voy"
+                "watashi (私)",
+                "anata (あなた)", 
+                "kare (彼)",
+                "kanojo (彼女)"
             ],
             correctAnswer: 0,
-            explanation: "『Yo hago』は『私はします』という意味です。『hacer』は『する』という動詞です。"
+            explanation: "『watashi』(私) significa 'yo' en japonés, es formal/neutral."
         },
         {
             id: 2,
             type: "multiple",
-            text: "『Ellos son』の正しい意味はどれですか？",
+            text: "¿Cuál es la forma educada de 'comer' en japonés?",
             options: [
-                "彼らはです（特性）",
-                "彼らはいます", 
-                "彼らはします",
-                "彼らは行きます"
+                "tabemasu (食べます)",
+                "taberu (食べる)", 
+                "nomimasu (飲みます)",
+                "nemasu (寝ます)"
             ],
             correctAnswer: 0,
-            explanation: "『ser』は永続的な特性を表し、『son』は『ellos』に対する形です。"
+            explanation: "『tabemasu』(食べます) es la forma educada/polite de 'comer'."
         },
         {
             id: 3,
             type: "truefalse",
-            text: "『Yo estoy』は『私はいます』という意味です。",
+            text: "『iru』(いる) se usa solo para seres vivos.",
             correctAnswer: 0,
-            explanation: "正解です！『estar』は状態や場所を表し、『yo estoy』は『私はいます』という意味です。"
+            explanation: "Verdadero. 『iru』 se usa para seres vivos, 『aru』 para objetos y cosas."
         },
         {
             id: 4,
             type: "fillblank",
-            text: "スペイン語で『私たち』は________です。",
-            correctAnswer: "nosotros",
-            explanation: "『nosotros』は『私たち』を意味する主語代名詞です。女性のみのグループの場合は『nosotras』を使います。"
+            text: "La forma diccionario de '飲みます' (beber) es: ________",
+            correctAnswer: "nomu",
+            explanation: "『nomimasu』(飲みます) es la forma educada, 『nomu』(飲む) es la forma diccionario."
         },
-        {
-            id: 5,
-            type: "dragdrop",
-            text: "動詞を正しい意味にドラッグしてください: ________ は『する』、________ は『いる/ある』、________ は『です』",
-            parts: [
-                { text: "hacer", correctPosition: 0 },
-                { text: "estar", correctPosition: 1 },
-                { text: "ser", correctPosition: 2 }
-            ],
-            options: ["ser", "estar", "hacer", "comer", "beber"],
-            explanation: "基本動詞: ser(です), estar(いる/ある), hacer(する), comer(食べる), beber(飲む)"
-        },
+     {
+    id: 5,
+    type: "dragdrop",
+    text: "Empareja los verbos: ________ significa 'hablar', ________ significa 'dormir', ________ significa 'jugar'",
+    parts: [
+        { text: "hanasu" }, // Sin correctPosition
+        { text: "neru" },
+        { text: "asobu" }
+    ],
+    options: ["hanasu", "neru", "asobu", "suru", "kuru"],
+    explanation: "Verbos básicos: hanasu(hablar), neru(dormir), asobu(jugar), suru(hacer), kuru(venir)"
+},
         {
             id: 6,
             type: "multiple",
-            text: "『Tú hablas』の正しい日本語訳はどれですか？",
+            text: "¿Cómo se dice 'ellos' en japonés?",
             options: [
-                "あなたは話します",
-                "あなたは食べます", 
-                "あなたは行きます",
-                "あなたは来ます"
+                "karera (彼ら)",
+                "kanojotachi (彼女たち)", 
+                "watashitachi (私たち)",
+                "anatatachi (あなたたち)"
             ],
             correctAnswer: 0,
-            explanation: "『hablar』は『話す』、『tú』は『あなた』を意味します。"
+            explanation: "『karera』(彼ら) significa 'ellos' en japonés."
         },
         {
             id: 7,
             type: "truefalse",
-            text: "『Vosotros coméis』は『あなたたちは食べます』という意味です。",
+            text: "『desu』(です) se usa para describir características permanentes.",
             correctAnswer: 0,
-            explanation: "正解です！『vosotros』はスペインで使われる『あなたたち』、『coméis』は『comer』のvosotros形です。"
+            explanation: "Verdadero. 『desu』 es equivalente a 'ser' y se usa para características permanentes."
         },
         {
             id: 8,
             type: "fillblank",
-            text: "スペイン語で『彼女』は________です。",
-            correctAnswer: "ella",
-            explanation: "『ella』は『彼女』を意味する主語代名詞です。"
+            text: "La forma educada de '来る' (venir) es: ________",
+            correctAnswer: "kimasu",
+            explanation: "『kuru』(来る) es forma diccionario, 『kimasu』(来ます) es forma educada."
         },
-        {
-            id: 9,
-            type: "dragdrop",
-            text: "動詞を正しい意味にドラッグしてください: ________ は『行く』、________ は『来る』、________ は『見る』",
-            parts: [
-                { text: "ir", correctPosition: 0 },
-                { text: "venir", correctPosition: 1 },
-                { text: "ver", correctPosition: 2 }
-            ],
-            options: ["ir", "venir", "ver", "escuchar", "jugar"],
-            explanation: "移動・知覚動詞: ir(行く), venir(来る), ver(見る), escuchar(聞く), jugar(遊ぶ)"
-        },
+       {
+    id: 9,
+    type: "dragdrop",
+    text: "Empareja los pronombres: ________ significa 'nosotros', ________ significa 'ella', ________ significa 'tú'",
+    parts: [
+        { text: "watashitachi" }, // Sin correctPosition
+        { text: "kanojo" },
+        { text: "anata" }
+    ],
+    options: ["watashi", "watashitachi", "kanojo", "anata", "kare"],
+    explanation: "Pronombres: watashitachi(nosotros), kanojo(ella), anata(tú/usted)"
+},
         {
             id: 10,
             type: "multiple",
-            text: "『Nosotros escuchamos』の意味は何ですか？",
+            text: "¿Qué verbo significa 'hacer' en japonés?",
             options: [
-                "私たちは聞きます",
-                "私たちは話します", 
-                "私たちは遊びます",
-                "私たちは寝ます"
+                "suru (する)",
+                "iku (行く)", 
+                "miru (見る)",
+                "kiku (聞く)"
             ],
             correctAnswer: 0,
-            explanation: "『escuchar』は『聞く』、『nosotros』は『私たち』を意味します。"
+            explanation: "『suru』(する) significa 'hacer' y es muy común en japonés."
         },
         {
             id: 11,
             type: "fillblank",
-            text: "スペイン語で『彼ら』は________です。",
-            correctAnswer: "ellos",
-            explanation: "『ellos』は『彼ら』を意味する主語代名詞です。女性のみのグループの場合は『ellas』を使います。"
+            text: "La forma diccionario de '行きます' (ir) es: ________",
+            correctAnswer: "iku",
+            explanation: "『ikimasu』(行きます) es forma educada, 『iku』(行く) es forma diccionario."
         },
         {
             id: 12,
             type: "multiple",
-            text: "『Ella juega』の正しい意味はどれですか？",
+            text: "¿Cuál es la diferencia entre 『iru』 y 『aru』?",
             options: [
-                "彼女は遊びます",
-                "彼女は寝ます", 
-                "彼女は食べます",
-                "彼女は飲みます"
+                "『iru』 para seres vivos, 『aru』 para objetos",
+                "『iru』 para objetos, 『aru』 para seres vivos", 
+                "Ambos significan lo mismo",
+                "『iru』 es formal, 『aru』 es informal"
             ],
             correctAnswer: 0,
-            explanation: "『jugar』は『遊ぶ』、『ella』は『彼女』を意味します。"
+            explanation: "『iru』(いる) se usa para seres vivos, 『aru』(ある) para objetos y cosas."
         },
         {
             id: 13,
             type: "truefalse",
-            text: "『Yo voy』と『Yo vengo』は同じ意味です。",
-            correctAnswer: 1,
-            explanation: "違います！『ir』は『行く』、『venir』は『来る』で、移動の方向が逆です。"
+            text: "『tabemasu』 y 『taberu』 significan lo mismo pero en diferentes niveles de formalidad.",
+            correctAnswer: 0,
+            explanation: "Verdadero. 『tabemasu』 es forma educada, 『taberu』 es forma diccionario, ambas significan 'comer'."
         },
-        {
-            id: 14,
-            type: "dragdrop",
-            text: "代名詞を正しいスペイン語にドラッグしてください: ________ は『あなた』、________ は『彼』、________ は『私たち』",
-            parts: [
-                { text: "tú", correctPosition: 0 },
-                { text: "él", correctPosition: 1 },
-                { text: "nosotros", correctPosition: 2 }
-            ],
-            options: ["yo", "tú", "él", "ella", "nosotros"],
-            explanation: "主語代名詞: yo(私), tú(君/あなた), él(彼), ella(彼女), nosotros(私たち)"
-        },
+{
+    id: 14,
+    type: "dragdrop",
+    text: "Empareja las formas: ________ es forma educada de 'ver', ________ es forma diccionario de 'escuchar', ________ es forma educada de 'beber'",
+    parts: [
+        { text: "mimasu" }, // Sin correctPosition
+        { text: "kiku" },
+        { text: "nomimasu" }
+    ],
+    options: ["mimasu", "miru", "kikimasu", "kiku", "nomimasu"],
+    explanation: "Formas verbales: mimasu(見ます - ver, educado), kiku(聞く - escuchar, diccionario), nomimasu(飲みます - beber, educado)"
+},
         {
             id: 15,
             type: "multiple",
-            text: "スペイン語で『あなたたちは飲みます』は何と言いますか？",
+            text: "¿Cómo se dice 'nosotras' (grupo solo de mujeres) en japonés?",
             options: [
-                "Vosotros bebéis",
-                "Vosotros coméis", 
-                "Ustedes beben",
-                "Ellos beben"
+                "watashitachi (私たち)",
+                "watashi (私)", 
+                "kanojotachi (彼女たち)",
+                "anatagata (あなたがた)"
             ],
             correctAnswer: 0,
-            explanation: "『vosotros bebéis』はスペインの『あなたたちは飲みます』、『ustedes beben』はラテンアメリカで使われます。"
+            explanation: "『watashitachi』(私たち) se usa para 'nosotros/nosotras'. El japonés no suele diferenciar género en primera persona plural."
         }
     ]
 };
+
+
 // Variables de estado
 let currentQuestionIndex = 0;
 let userAnswers = Array(examData.questions.length).fill(null);
@@ -515,9 +517,14 @@ function calculateResults() {
                 isCorrect = userAnswer && userAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
                 break;
             case "dragdrop":
-                isCorrect = question.parts.every((part, partIndex) => {
-                    return userAnswer && userAnswer[partIndex] === part.correctPosition;
-                });
+                // NUEVA LÓGICA: Comparar textos directamente
+                if (userAnswer && Array.isArray(userAnswer)) {
+                    isCorrect = question.parts.every((part, partIndex) => {
+                        const userSelectedIndex = userAnswer[partIndex];
+                        const userSelectedText = question.options[userSelectedIndex];
+                        return userSelectedText === part.text;
+                    });
+                }
                 break;
         }
         
@@ -541,10 +548,10 @@ function calculateResults() {
                     correctAnswerText = question.correctAnswer;
                     break;
                 case "dragdrop":
-                    userAnswerText = userAnswer ? question.parts.map((part, partIndex) => 
-                        question.options[userAnswer[partIndex]]).join(", ") : "No respondida";
-                    correctAnswerText = question.parts.map(part => 
-                        question.options[part.correctPosition]).join(", ");
+                    // CORREGIDO: Usar la misma lógica que en calculateResults
+                    userAnswerText = userAnswer ? userAnswer.map(index => 
+                        question.options[index]).join(", ") : "No respondida";
+                    correctAnswerText = question.parts.map(part => part.text).join(", ");
                     break;
             }
             
@@ -608,7 +615,9 @@ async function saveResultsToFirestore(results) {
             score: results.score,
             correctAnswers: results.correctAnswers,
             totalQuestions: examData.questions.length,
-            timestamp: serverTimestamp()
+            timestamp: serverTimestamp(),
+            userAnswers: userAnswers, // Ahora es más simple
+            incorrectQuestions: results.incorrectQuestions
         };
         
         // Convertir userAnswers a formato compatible con Firestore
@@ -666,4 +675,6 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
+
 
