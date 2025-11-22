@@ -19,167 +19,212 @@ const db = getFirestore(app);
 // Datos del examen con diferentes tipos de preguntas
 // Datos del examen para practicar japonés - Verbos y Pronombres
 const examData = {
-    title: "日本語テスト - Verbos y Pronombres",
+    title: "スペイン語総合テスト - 動詞、代名詞、前置詞",
     questions: [
         {
             id: 1,
             type: "multiple",
-            text: "¿Cómo se dice 'yo' en japonés?",
+            text: "スペイン語で『マドリードへ行きます』は何と言いますか？",
             options: [
-                "watashi (私)",
-                "anata (あなた)", 
-                "kare (彼)",
-                "kanojo (彼女)"
+                "Voy a Madrid",
+                "Voy de Madrid", 
+                "Voy con Madrid",
+                "Voy por Madrid"
             ],
             correctAnswer: 0,
-            explanation: "『watashi』(私) significa 'yo' en japonés, es formal/neutral."
+            explanation: "『Voy a Madrid』 - 前置詞『a』は方向や目的地を示します"
         },
         {
             id: 2,
             type: "multiple",
-            text: "¿Cuál es la forma educada de 'comer' en japonés?",
+            text: "『私たちは話します』の正しい形はどれですか？",
             options: [
-                "tabemasu (食べます)",
-                "taberu (食べる)", 
-                "nomimasu (飲みます)",
-                "nemasu (寝ます)"
+                "Hablamos",
+                "Habláis", 
+                "Hablan",
+                "Habla"
             ],
             correctAnswer: 0,
-            explanation: "『tabemasu』(食べます) es la forma educada/polite de 'comer'."
+            explanation: "『Hablamos』は『nosotros』（私たち）の動詞『hablar』の活用形です"
         },
         {
             id: 3,
             type: "truefalse",
-            text: "『iru』(いる) se usa solo para seres vivos.",
+            text: "『Soy de Japón』は『私は日本からです』という意味です。",
             correctAnswer: 0,
-            explanation: "Verdadero. 『iru』 se usa para seres vivos, 『aru』 para objetos y cosas."
+            explanation: "正解です。『de』は出身や起源を示します"
         },
         {
             id: 4,
             type: "fillblank",
-            text: "La forma diccionario de '飲みます' (beber) es: ________",
-            correctAnswer: "nomu",
-            explanation: "『nomimasu』(飲みます) es la forma educada, 『nomu』(飲む) es la forma diccionario."
+            text: "Ella ________ agua todos los días. (beber/飲む)",
+            correctAnswer: "bebe",
+            explanation: "『bebe』は『ella』（彼女）の動詞『beber』の活用形です"
         },
-     {
-    id: 5,
-    type: "dragdrop",
-    text: "Empareja los verbos: ________ significa 'hablar', ________ significa 'dormir', ________ significa 'jugar'",
-    parts: [
-        { text: "hanasu" }, // Sin correctPosition
-        { text: "neru" },
-        { text: "asobu" }
-    ],
-    options: ["hanasu", "neru", "asobu", "suru", "kuru"],
-    explanation: "Verbos básicos: hanasu(hablar), neru(dormir), asobu(jugar), suru(hacer), kuru(venir)"
-},
+        {
+            id: 5,
+            type: "dragdrop",
+            text: "前置詞を入れて完成させてください: Voy ________ mi amigo ________ la escuela ________ coche.",
+            parts: [
+                { text: "con" },
+                { text: "a" },
+                { text: "en" }
+            ],
+            options: ["a", "de", "en", "con", "por"],
+            explanation: "前置詞: con (〜と), a (〜へ), en (〜で/中で)。『友達と車で学校へ行く』"
+        },
         {
             id: 6,
             type: "multiple",
-            text: "¿Cómo se dice 'ellos' en japonés?",
+            text: "『Ellos ven la televisión』の意味は何ですか？",
             options: [
-                "karera (彼ら)",
-                "kanojotachi (彼女たち)", 
-                "watashitachi (私たち)",
-                "anatatachi (あなたたち)"
+                "彼らはテレビを見ます",
+                "彼らはテレビを食べます", 
+                "彼らはテレビを飲みます",
+                "彼らはテレビを話します"
             ],
             correctAnswer: 0,
-            explanation: "『karera』(彼ら) significa 'ellos' en japonés."
+            explanation: "『ven』は動詞『ver』（見る）の活用形です"
         },
         {
             id: 7,
             type: "truefalse",
-            text: "『desu』(です) se usa para describir características permanentes.",
+            text: "『Este regalo es para ti』の『para』は受け取り手を示しています。",
             correctAnswer: 0,
-            explanation: "Verdadero. 『desu』 es equivalente a 'ser' y se usa para características permanentes."
+            explanation: "正解です。『para』は最終的な受け取り手や目的を示します"
         },
         {
             id: 8,
             type: "fillblank",
-            text: "La forma educada de '来る' (venir) es: ________",
-            correctAnswer: "kimasu",
-            explanation: "『kuru』(来る) es forma diccionario, 『kimasu』(来ます) es forma educada."
+            text: "________ hacemos la tarea juntos. (nosotros/私たち)",
+            correctAnswer: "Nosotros",
+            explanation: "『Nosotros』は『私たち』を意味する代名詞です"
         },
-       {
-    id: 9,
-    type: "dragdrop",
-    text: "Empareja los pronombres: ________ significa 'nosotros', ________ significa 'ella', ________ significa 'tú'",
-    parts: [
-        { text: "watashitachi" }, // Sin correctPosition
-        { text: "kanojo" },
-        { text: "anata" }
-    ],
-    options: ["watashi", "watashitachi", "kanojo", "anata", "kare"],
-    explanation: "Pronombres: watashitachi(nosotros), kanojo(ella), anata(tú/usted)"
-},
+        {
+            id: 9,
+            type: "dragdrop",
+            text: "動詞『comer』を活用させてください: Yo ________, Tú ________, Él ________",
+            parts: [
+                { text: "como" },
+                { text: "comes" },
+                { text: "come" }
+            ],
+            options: ["como", "comes", "come", "comemos", "comen"],
+            explanation: "comerの活用: yo como, tú comes, él/ella come, nosotros comemos, ellos comen"
+        },
         {
             id: 10,
             type: "multiple",
-            text: "¿Qué verbo significa 'hacer' en japonés?",
+            text: "前置詞『de』はいつ使いますか？",
             options: [
-                "suru (する)",
-                "iku (行く)", 
-                "miru (見る)",
-                "kiku (聞く)"
+                "出身と所有を示す時",
+                "方向を示す時", 
+                "時間を示す時",
+                "手段を示す時"
             ],
             correctAnswer: 0,
-            explanation: "『suru』(する) significa 'hacer' y es muy común en japonés."
+            explanation: "『de』は出身（soy de España）や所有（el libro de Juan）を示します"
         },
         {
             id: 11,
-            type: "fillblank",
-            text: "La forma diccionario de '行きます' (ir) es: ________",
-            correctAnswer: "iku",
-            explanation: "『ikimasu』(行きます) es forma educada, 『iku』(行く) es forma diccionario."
+            type: "truefalse",
+            text: "『Voy por el parque』は『公園のために行く』という意味です。",
+            correctAnswer: 1,
+            explanation: "違います。『公園を通って行く』という意味です。『por』は経路や通過を示します"
         },
         {
             id: 12,
-            type: "multiple",
-            text: "¿Cuál es la diferencia entre 『iru』 y 『aru』?",
-            options: [
-                "『iru』 para seres vivos, 『aru』 para objetos",
-                "『iru』 para objetos, 『aru』 para seres vivos", 
-                "Ambos significan lo mismo",
-                "『iru』 es formal, 『aru』 es informal"
-            ],
-            correctAnswer: 0,
-            explanation: "『iru』(いる) se usa para seres vivos, 『aru』(ある) para objetos y cosas."
+            type: "fillblank",
+            text: "¿________ es tu nombre? (you formal/あなた-丁寧)",
+            correctAnswer: "Usted",
+            explanation: "『Usted』は丁寧な『あなた』の形です"
         },
         {
             id: 13,
-            type: "truefalse",
-            text: "『tabemasu』 y 『taberu』 significan lo mismo pero en diferentes niveles de formalidad.",
-            correctAnswer: 0,
-            explanation: "Verdadero. 『tabemasu』 es forma educada, 『taberu』 es forma diccionario, ambas significan 'comer'."
+            type: "dragdrop",
+            text: "代名詞を組み合わせてください: ________ (私), ________ (君/あなた-カジュアル), ________ (彼ら)",
+            parts: [
+                { text: "yo" },
+                { text: "tú" },
+                { text: "ellos" }
+            ],
+            options: ["yo", "tú", "él", "ella", "ellos"],
+            explanation: "基本代名詞: yo (私), tú (君/あなた-カジュアル), ellos (彼ら-男性)"
         },
-{
-    id: 14,
-    type: "dragdrop",
-    text: "Empareja las formas: ________ es forma educada de 'ver', ________ es forma diccionario de 'escuchar', ________ es forma educada de 'beber'",
-    parts: [
-        { text: "mimasu" }, // Sin correctPosition
-        { text: "kiku" },
-        { text: "nomimasu" }
-    ],
-    options: ["mimasu", "miru", "kikimasu", "kiku", "nomimasu"],
-    explanation: "Formas verbales: mimasu(見ます - ver, educado), kiku(聞く - escuchar, diccionario), nomimasu(飲みます - beber, educado)"
-},
         {
-            id: 15,
+            id: 14,
             type: "multiple",
-            text: "¿Cómo se dice 'nosotras' (grupo solo de mujeres) en japonés?",
+            text: "『dormir』の『ella』の活用形はどれですか？",
             options: [
-                "watashitachi (私たち)",
-                "watashi (私)", 
-                "kanojotachi (彼女たち)",
-                "anatagata (あなたがた)"
+                "duerme",
+                "dorme", 
+                "dorma",
+                "dormes"
             ],
             correctAnswer: 0,
-            explanation: "『watashitachi』(私たち) se usa para 'nosotros/nosotras'. El japonés no suele diferenciar género en primera persona plural."
+            explanation: "『duerme』 - dormirは不規則動詞で、一部の活用でo→ueに変化します"
+        },
+        {
+            id: 15,
+            type: "truefalse",
+            text: "『Hablamos con el profesor』の『con』は共同を正しく示しています。",
+            correctAnswer: 0,
+            explanation: "正解です。『con』は共同や手段を示します"
+        },
+        {
+            id: 16,
+            type: "fillblank",
+            text: "Mi hermana ________ japonés en la universidad. (estudiar/勉強する)",
+            correctAnswer: "estudia",
+            explanation: "『estudia』 - 『ella』（彼女）の動詞『estudiar』の活用形です"
+        },
+        {
+            id: 17,
+            type: "dragdrop",
+            text: "動詞を入れて完成させてください: Yo ________ español, Tú ________ agua, Nosotros ________ fútbol",
+            parts: [
+                { text: "hablo" },
+                { text: "bebes" },
+                { text: "jugamos" }
+            ],
+            options: ["hablo", "bebes", "jugamos", "como", "voy"],
+            explanation: "動詞: hablo (話す), bebes (飲む), jugamos (遊ぶ)"
+        },
+        {
+            id: 18,
+            type: "multiple",
+            text: "交通手段を示す時、どの前置詞を使いますか？",
+            options: [
+                "en",
+                "a", 
+                "de",
+                "por"
+            ],
+            correctAnswer: 0,
+            explanation: "『en』は交通手段に使います: en coche (車で), en tren (電車で), en avión (飛行機で)"
+        },
+        {
+            id: 19,
+            type: "fillblank",
+            text: "________ viven en Tokio. (they feminine/彼女たち)",
+            correctAnswer: "Ellas",
+            explanation: "『Ellas』は女性だけのグループの『彼女たち』を意味する代名詞です"
+        },
+        {
+            id: 20,
+            type: "multiple",
+            text: "『友達と公園へ行きます』はスペイン語で何と言いますか？",
+            options: [
+                "Vamos al parque con amigos",
+                "Vamos a el parque con amigos", 
+                "Vamos del parque con amigos",
+                "Vamos por el parque con amigos"
+            ],
+            correctAnswer: 0,
+            explanation: "『Vamos al parque con amigos』 - 『a + el』は『al』に短縮され、『con』は共同を示します"
         }
     ]
 };
-
 
 // Variables de estado
 let currentQuestionIndex = 0;
@@ -675,6 +720,7 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
 
 
 
