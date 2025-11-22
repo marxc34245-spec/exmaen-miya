@@ -22,18 +22,19 @@ const examData = {
     title: "スペイン語総合テスト - 動詞、代名詞、前置詞",
     questions: [
         {
-            id: 1,
-            type: "multiple",
-            text: "スペイン語で『マドリードへ行きます』は何と言いますか？",
-            options: [
-                "Voy a Madrid",
-                "Voy de Madrid", 
-                "Voy con Madrid",
-                "Voy por Madrid"
-            ],
-            correctAnswer: 0,
-            explanation: "『Voy a Madrid』 - 前置詞『a』は方向や目的地を示します"
-        },
+   {
+    id: 1,
+    type: "multiple",
+    text: "スペイン語で『ペルーへ行きます』は何と言いますか？",
+    options: [
+        "Voy a Perú",
+        "Voy de Perú", 
+        "Voy con Perú",
+        "Voy por Perú"
+    ],
+    correctAnswer: 0,
+    explanation: "『Voy a Perú』 - 前置詞『a』は方向や目的地を示します"
+    },
         {
             id: 2,
             type: "multiple",
@@ -720,6 +721,7 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
 
 
 
