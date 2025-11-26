@@ -314,23 +314,21 @@ const examData = {
             text: "『Tú duermes ocho horas』は『君は8時間寝ます』という意味です。",
             correctAnswer: 0,
             explanation: "正解です。『duermes』は『tú』の動詞『dormir』の活用形（不規則変化: o→ue）"
+        },
+        {
+            id: 31,
+            type: "multiple",
+            text: "『¿Me ves?』の正しい意味はどれですか？",
+            options: [
+                "私が見えますか？",
+                "君が見えますか？", 
+                "彼が見えますか？",
+                "私たちが見えますか？"
+            ],
+            correctAnswer: 0,
+            explanation: "『Me ves』 - 動詞『ver』（見る）の活用と代名詞の組み合わせ。『ves』は『tú』（君）の活用形で、『me』は『私を』を意味します"
         }
     ]
-
-    
-},
-{
-    id: 31,
-    type: "multiple",
-    text: "『¿Me ves?』の正しい意味はどれですか？",
-    options: [
-        "私が見えますか？",
-        "君が見えますか？", 
-        "彼が見えますか？",
-        "私たちが見えますか？"
-    ],
-    correctAnswer: 0,
-    explanation: "『Me ves』 - 動詞『ver』（見る）の活用と代名詞の組み合わせ。『ves』は『tú』（君）の活用形で、『me』は『私を』を意味します"
 };
 
 // Variables de estado
@@ -827,6 +825,7 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
 
 
 
