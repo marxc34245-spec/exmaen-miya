@@ -19,314 +19,262 @@ const db = getFirestore(app);
 // Datos del examen con diferentes tipos de preguntas
 // Datos del examen para practicar japonés - Verbos y Pronombres
 const examData = {
-    title: "スペイン語動詞マスター試験 - 活用と用法",
+    title: "スペイン語テスト - 動詞の練習",
     questions: [
         {
             id: 1,
             type: "multiple",
-            text: "『私は毎日水を飲みます』の正しいスペイン語は？",
+            text: "『私は食べます』のスペイン語は何ですか？",
             options: [
-                "Yo bebo agua todos los días",
-                "Tú bebes agua todos los días", 
-                "Él bebe agua todos los días",
-                "Nosotros bebemos agua todos los días"
+                "Yo como",
+                "Yo bebo", 
+                "Yo hablo",
+                "Yo duermo"
             ],
             correctAnswer: 0,
-            explanation: "『Yo bebo』 - 主語『Yo』に合わせた動詞『beber』の活用形です"
+            explanation: "『Yo como』 - 動詞『comer』（食べる）の『yo』形"
         },
         {
             id: 2,
             type: "truefalse",
-            text: "『Ella come pan』は『彼女はパンを食べます』という意味です。",
+            text: "『Ella bebe』は『彼女は飲みます』という意味です。",
             correctAnswer: 0,
-            explanation: "正解です。『come』は『ella』の動詞『comer』の活用形です"
+            explanation: "正解です。『beber』は『飲む』、『ella』は『彼女』です"
         },
         {
             id: 3,
             type: "fillblank",
-            text: "Mis amigos ________ al cine los viernes. (ir/行く)",
-            correctAnswer: "van",
-            explanation: "『van』 - 『ellos』（彼ら）の動詞『ir』の活用形です"
+            text: "Nosotros ________. (hablar/話す)",
+            correctAnswer: "hablamos",
+            explanation: "『hablamos』は『nosotros』（私たち）の『hablar』形"
         },
         {
             id: 4,
-            type: "dragdrop",
-            text: "動詞を正しく活用させてください: Yo ________, Tú ________, Nosotros ________ (hablar/話す)",
-            parts: [
-                { text: "hablo" },
-                { text: "hablas" },
-                { text: "hablamos" }
+            type: "multiple",
+            text: "『あなたは行きます』のスペイン語は？",
+            options: [
+                "Tú vas",
+                "Tú vienes", 
+                "Tú ves",
+                "Tú haces"
             ],
-            options: ["hablo", "hablas", "habla", "hablamos", "hablan"],
-            explanation: "hablarの活用: yo hablo, tú hablas, él/ella habla, nosotros hablamos, ellos hablan"
+            correctAnswer: 0,
+            explanation: "『Tú vas』 - 動詞『ir』（行く）の『tú』形"
         },
         {
             id: 5,
-            type: "multiple",
-            text: "『私たちは公園で遊びます』の正しいスペイン語は？",
-            options: [
-                "Nosotros jugamos en el parque",
-                "Yo juego en el parque", 
-                "Ellos juegan en el parque",
-                "Tú juegas en el parque"
+            type: "dragdrop",
+            text: "動詞を組み合わせて: Yo ________, Tú ________, Él ________",
+            parts: [
+                { text: "duermo" },
+                { text: "duermes" },
+                { text: "duerme" }
             ],
-            correctAnswer: 0,
-            explanation: "『Nosotros jugamos』 - 主語『nosotros』に合わせた動詞『jugar』の活用形です"
+            options: ["duermo", "duermes", "duerme", "dormimos", "duermen"],
+            explanation: "dormirの活用: yo duermo, tú duermes, él duerme"
         },
         {
             id: 6,
-            type: "truefalse",
-            text: "『Vosotros bebéis leche』は『君たちは牛乳を飲みます』という意味です。",
+            type: "multiple",
+            text: "『彼らは見ます』のスペイン語は？",
+            options: [
+                "Ellos ven",
+                "Ellos comen", 
+                "Ellos beben",
+                "Ellos hablan"
+            ],
             correctAnswer: 0,
-            explanation: "正解です。『bebéis』は『vosotros』の動詞『beber』の活用形です"
+            explanation: "『Ellos ven』 - 動詞『ver』（見る）の『ellos』形"
         },
         {
             id: 7,
-            type: "fillblank",
-            text: "Mi hermana ________ temprano todos los días. (dormir/寝る)",
-            correctAnswer: "duerme",
-            explanation: "『duerme』 - 『ella』の動詞『dormir』の活用形（不規則変化: o→ue）"
+            type: "truefalse",
+            text: "『Yo juego』は『私は遊びます』という意味です。",
+            correctAnswer: 0,
+            explanation: "正解です。『jugar』は『遊ぶ』、不規則動詞です"
         },
         {
             id: 8,
-            type: "dragdrop",
-            text: "前置詞を入れて完成させてください: ________ la mañana voy ________ escuela ________ autobús.",
-            parts: [
-                { text: "Por" },
-                { text: "a la" },
-                { text: "en" }
-            ],
-            options: ["a", "a la", "de", "en", "Por", "para"],
-            explanation: "前置詞: Por (時間帯), a la (方向), en (手段)。『朝、バスで学校へ行く』"
+            type: "fillblank",
+            text: "Ella ________ música. (escuchar/聞く)",
+            correctAnswer: "escucha",
+            explanation: "『escucha』は『ella』（彼女）の『escuchar』形"
         },
         {
             id: 9,
             type: "multiple",
-            text: "『彼らは音楽を聴きます』の正しいスペイン語は？",
+            text: "『私たちはします』のスペイン語は？",
             options: [
-                "Ellos escuchan música",
-                "Ellas escuchan música", 
-                "Nosotros escuchamos música",
-                "Vosotros escucháis música"
+                "Nosotros hacemos",
+                "Nosotros somos", 
+                "Nosotros estamos",
+                "Nosotros vamos"
             ],
             correctAnswer: 0,
-            explanation: "『Ellos escuchan』 - 男性グループの『ellos』に合わせた動詞『escuchar』の活用形です"
+            explanation: "『Nosotros hacemos』 - 動詞『hacer』（する）の『nosotros』形"
         },
         {
             id: 10,
-            type: "truefalse",
-            text: "『Tú haces ejercicio』は『君は運動します』という意味です。",
-            correctAnswer: 0,
-            explanation: "正解です。『haces』は『tú』の動詞『hacer』の活用形です"
+            type: "dragdrop",
+            text: "代名詞と動詞を組み合わせて: ________ come, ________ bebe, ________ habla",
+            parts: [
+                { text: "Él" },
+                { text: "Ella" },
+                { text: "Yo" }
+            ],
+            options: ["Yo", "Tú", "Él", "Ella", "Nosotros"],
+            explanation: "Él come (彼は食べる), Ella bebe (彼女は飲む), Yo hablo (私は話す)"
         },
         {
             id: 11,
-            type: "fillblank",
-            text: "________ vienen de México. (they feminine/彼女たち)",
-            correctAnswer: "Ellas",
-            explanation: "『Ellas』は女性だけのグループを指す代名詞です"
+            type: "truefalse",
+            text: "『Tú vienes』は『あなたは来ます』という意味です。",
+            correctAnswer: 0,
+            explanation: "正解です。『venir』は『来る』、不規則動詞です"
         },
         {
             id: 12,
-            type: "dragdrop",
-            text: "動詞『ver』を活用させてください: Yo ________, Él ________, Ustedes ________",
-            parts: [
-                { text: "veo" },
-                { text: "ve" },
-                { text: "ven" }
-            ],
-            options: ["veo", "ves", "ve", "vemos", "ven"],
-            explanation: "verの活用: yo veo, tú ves, él/ella ve, nosotros vemos, ellos ven"
+            type: "fillblank",
+            text: "Ustedes ________ fútbol. (jugar/遊ぶ)",
+            correctAnswer: "juegan",
+            explanation: "『juegan』は『ustedes』（あなたたち）の『jugar』形"
         },
         {
             id: 13,
             type: "multiple",
-            text: "『私は日本語を話します』の正しいスペイン語は？",
+            text: "『彼女はです』のスペイン語は？",
             options: [
-                "Yo hablo japonés",
-                "Tú hablas japonés", 
-                "Ella habla japonés",
-                "Nosotros hablamos japonés"
+                "Ella es",
+                "Ella está", 
+                "Ella hace",
+                "Ella va"
             ],
             correctAnswer: 0,
-            explanation: "『Yo hablo』 - 主語『yo』に合わせた動詞『hablar』の活用形です"
+            explanation: "『Ella es』 - 動詞『ser』（です）の『ella』形"
         },
         {
             id: 14,
-            type: "truefalse",
-            text: "『Nosotras comemos pizza』は『私たち（女性）はピザを食べます』という意味です。",
-            correctAnswer: 0,
-            explanation: "正解です。『comemos』は『nosotras』の動詞『comer』の活用形です"
+            type: "dragdrop",
+            text: "動詞を入れて: Yo ________ agua, Tú ________ pan, Nosotros ________ español",
+            parts: [
+                { text: "bebo" },
+                { text: "comes" },
+                { text: "hablamos" }
+            ],
+            options: ["bebo", "comes", "hablamos", "vemos", "hacemos"],
+            explanation: "Yo bebo agua, Tú comes pan, Nosotros hablamos español"
         },
         {
             id: 15,
-            type: "fillblank",
-            text: "¿________ estudias español conmigo? (you informal/君)",
-            correctAnswer: "Tú",
-            explanation: "『Tú』は親しい相手への『あなた』を指す代名詞です"
+            type: "truefalse",
+            text: "『Ellos están』は『彼らはいます』という意味です。",
+            correctAnswer: 0,
+            explanation: "正解です。『estar』は状態や場所の『います/あります』"
         },
         {
             id: 16,
-            type: "dragdrop",
-            text: "代名詞と動詞を組み合わせてください: ________ (私/話す), ________ (君/食べる), ________ (彼女/寝る)",
-            parts: [
-                { text: "Yo hablo" },
-                { text: "Tú comes" },
-                { text: "Ella duerme" }
-            ],
-            options: ["Yo hablo", "Tú comes", "Él bebe", "Ella duerme", "Nosotros vamos"],
-            explanation: "基本の組み合わせ: Yo hablo, Tú comes, Ella duerme"
+            type: "fillblank",
+            text: "Vosotros ________ a casa. (ir/行く)",
+            correctAnswer: "vais",
+            explanation: "『vais』は『vosotros』（スペインのあなたたち）の『ir』形"
         },
         {
             id: 17,
             type: "multiple",
-            text: "『あなた（丁寧）はテレビを見ます』の正しいスペイン語は？",
+            text: "『私は寝ます』のスペイン語は？",
             options: [
-                "Usted ve la televisión",
-                "Tú ves la televisión", 
-                "Él ve la televisión",
-                "Ustedes ven la televisión"
+                "Yo duermo",
+                "Yo como", 
+                "Yo bebo",
+                "Yo hablo"
             ],
             correctAnswer: 0,
-            explanation: "『Usted ve』 - 丁寧な『あなた』に合わせた動詞『ver』の活用形です"
+            explanation: "『Yo duermo』 - 動詞『dormir』（寝る）の『yo』形"
         },
         {
             id: 18,
-            type: "truefalse",
-            text: "『Vosotras bebéis agua』は女性グループに対して正しい表現です。",
-            correctAnswer: 0,
-            explanation: "正解です。『bebéis』は『vosotras』の動詞『beber』の活用形です"
+            type: "dragdrop",
+            text: "代名詞を入れて: ________ soy, ________ eres, ________ es",
+            parts: [
+                { text: "Yo" },
+                { text: "Tú" },
+                { text: "Él" }
+            ],
+            options: ["Yo", "Tú", "Él", "Ella", "Nosotros"],
+            explanation: "Yo soy, Tú eres, Él es - 動詞『ser』の活用"
         },
         {
             id: 19,
-            type: "fillblank",
-            text: "Los estudiantes ________ deporte en la escuela. (hacer/する)",
-            correctAnswer: "hacen",
-            explanation: "『hacen』 - 『ellos』（彼ら）の動詞『hacer』の活用形です"
+            type: "truefalse",
+            text: "『Nosotros vamos』と『Nosotros venimos』は同じ意味です。",
+            correctAnswer: 1,
+            explanation: "違います。『ir』は『行く』、『venir』は『来る』です"
         },
         {
             id: 20,
-            type: "dragdrop",
-            text: "前置詞を入れて完成させてください: Este regalo es ________ ti. Lo compré ________ mi madre ________ el dinero.",
-            parts: [
-                { text: "para" },
-                { text: "con" },
-                { text: "de" }
-            ],
-            options: ["a", "de", "en", "por", "para", "con"],
-            explanation: "前置詞: para (目的/受け取り手), con (手段), de (起源)。『君への贈り物。母のお金で買った』"
-        },
-        {
+            type: "fillblank",
+            text: "Ellas ________ la televisión. (ver/見る)",
+            correctAnswer: "ven",
+            explanation: "『ven』は『ellas』（彼女たち）の『ver』形"
+        }
+         {
             id: 21,
             type: "multiple",
-            text: "『君たち（スペイン）はここに住んでいます』の正しいスペイン語は？",
+            text: "『私はあなたを見ます』のスペイン語は何ですか？",
             options: [
-                "Vosotros vivís aquí",
-                "Ustedes viven aquí", 
-                "Nosotros vivimos aquí",
-                "Ellos viven aquí"
+                "Yo te veo",
+                "Yo me veo", 
+                "Yo se veo",
+                "Yo nos veo"
             ],
             correctAnswer: 0,
-            explanation: "『Vosotros vivís』 - スペインで使われる『君たち』に合わせた動詞『vivir』の活用形です"
+            explanation: "『te』は『あなたを』という目的語です。Yo te veo - 私はあなたを見ます"
         },
         {
             id: 22,
             type: "truefalse",
-            text: "『Yo voy a la playa』は『私はビーチへ行きます』という意味です。",
+            text: "『Él me habla』は『彼は私に話します』という意味です。",
             correctAnswer: 0,
-            explanation: "正解です。『voy』は『yo』の動詞『ir』の活用形です"
+            explanation: "正解です。『me』は『私に』という間接目的語です"
         },
         {
             id: 23,
             type: "fillblank",
-            text: "Mi padre ________ el periódico cada mañana. (leer/読む)",
-            correctAnswer: "lee",
-            explanation: "『lee』 - 『él』（彼）の動詞『leer』の活用形です"
+            text: "Ella ________ ve en el espejo. (se/自分自身を)",
+            correctAnswer: "se",
+            explanation: "『se ve』は『彼女は自分自身を見る』という意味です。鏡の中で自分自身を見ます"
         },
         {
             id: 24,
             type: "dragdrop",
-            text: "動詞『jugar』を活用させてください: Yo ________, Ella ________, Nosotros ________",
+            text: "代名詞を入れて: Yo ________ veo, Tú ________ ves, Nosotros ________ vemos",
             parts: [
-                { text: "juego" },
-                { text: "juega" },
-                { text: "jugamos" }
+                { text: "me" },
+                { text: "te" },
+                { text: "nos" }
             ],
-            options: ["juego", "juegas", "juega", "jugamos", "juegan"],
-            explanation: "jugarの活用（不規則）: yo juego, tú juegas, él/ella juega, nosotros jugamos, ellos juegan"
+            options: ["me", "te", "se", "nos", "os"],
+            explanation: "再帰代名詞: yo me veo (自分自身を見る), tú te ves, nosotros nos vemos"
         },
         {
             id: 25,
             type: "multiple",
-            text: "『私たち（女性のみ）は勉強します』の正しいスペイン語は？",
+            text: "『あなたは私に話します』のスペイン語は？",
             options: [
-                "Nosotras estudiamos",
-                "Nosotros estudiamos", 
-                "Ellas estudian",
-                "Vosotras estudiáis"
+                "Tú me hablas",
+                "Tú te hablas", 
+                "Tú se hablas",
+                "Tú nos hablas"
             ],
             correctAnswer: 0,
-            explanation: "『Nosotras estudiamos』 - 女性グループの『nosotras』に合わせた動詞『estudiar』の活用形です"
+            explanation: "『me』は『私に』という間接目的語です。Tú me hablas - あなたは私に話します"
         },
         {
             id: 26,
-            type: "truefalse",
-            text: "『Él viene de Argentina』は『彼はアルゼンチンから来ます』という意味です。",
-            correctAnswer: 0,
-            explanation: "正解です。『viene』は『él』の動詞『venir』の活用形です"
-        },
-        {
-            id: 27,
             type: "fillblank",
-            text: "¿A qué hora ________ ustedes a casa? (volver/戻る)",
-            correctAnswer: "vuelven",
-            explanation: "『vuelven』 - 『ustedes』の動詞『volver』の活用形（不規則変化: o→ue）"
-        },
-        {
-            id: 28,
-            type: "dragdrop",
-            text: "文を完成させてください: ________ (私) ________ (行く) ________ (〜へ) cine ________ (〜と) amigos.",
-            parts: [
-                { text: "Yo" },
-                { text: "voy" },
-                { text: "al" },
-                { text: "con" }
-            ],
-            options: ["Yo", "Tú", "voy", "vas", "a", "al", "con", "de"],
-            explanation: "『Yo voy al cine con amigos.』 - 主語、動詞、前置詞の組み合わせ"
-        },
-        {
-            id: 29,
-            type: "multiple",
-            text: "『彼女たちはフランス語を話します』の正しいスペイン語は？",
-            options: [
-                "Ellas hablan francés",
-                "Ellos hablan francés", 
-                "Nosotras hablamos francés",
-                "Ustedes hablan francés"
-            ],
-            correctAnswer: 0,
-            explanation: "『Ellas hablan』 - 女性グループの『ellas』に合わせた動詞『hablar』の活用形です"
-        },
-        {
-            id: 30,
-            type: "truefalse",
-            text: "『Tú duermes ocho horas』は『君は8時間寝ます』という意味です。",
-            correctAnswer: 0,
-            explanation: "正解です。『duermes』は『tú』の動詞『dormir』の活用形（不規則変化: o→ue）"
-        },
-        {
-            id: 31,
-            type: "multiple",
-            text: "『¿Me ves?』の正しい意味はどれですか？",
-            options: [
-                "私が見えますか？",
-                "君が見えますか？", 
-                "彼が見えますか？",
-                "私たちが見えますか？"
-            ],
-            correctAnswer: 0,
-            explanation: "『Me ves』 - 動詞『ver』（見る）の活用と代名詞の組み合わせ。『ves』は『tú』（君）の活用形で、『me』は『私を』を意味します"
+            text: "Nosotros ________ hablamos en español. (nos/私たちはお互いに)",
+            correctAnswer: "nos",
+            explanation: "『nos hablamos』は『私たちはお互いに話します』という意味です"
         }
     ]
 };
@@ -825,6 +773,7 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
 
 
 
