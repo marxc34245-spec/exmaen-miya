@@ -216,7 +216,7 @@ const examData = {
             text: "Ellas ________ la televisión. (ver/見る)",
             correctAnswer: "ven",
             explanation: "『ven』は『ellas』（彼女たち）の『ver』形"
-        }
+        },
          {
             id: 21,
             type: "multiple",
@@ -773,6 +773,7 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
 
 
 
