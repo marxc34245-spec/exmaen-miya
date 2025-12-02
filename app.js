@@ -269,9 +269,9 @@ const examData = {
             correctAnswer: 0,
             explanation: "『me』は『私に』という間接目的語です。Tú me hablas - あなたは私に話します"
         },
-        {
+               {
             id: 26,
-            type: "fillblank",
+            type: "fillblank",  // CORREGIDO: era "filldrop"
             text: "Nosotros ________ hablamos en español. (nos/私たちはお互いに)",
             correctAnswer: "nos",
             explanation: "『nos hablamos』は『私たちはお互いに話します』という意味です"
@@ -773,6 +773,7 @@ async function saveResultsToFirestore(results) {
 
 // Inicializar la aplicación
 displayQuestion();
+
 
 
 
